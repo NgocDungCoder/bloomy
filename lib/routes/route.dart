@@ -110,7 +110,7 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.addPlaylist.sp,
     page: () => AddPlaylistView(),
-    // binding: SplashBinding(),
+    binding: AddPlaylistBinding(),
   ),
   GetPage(
     name: Routes.queue.sp,

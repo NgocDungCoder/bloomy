@@ -2,8 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
+import 'package:bloomy/controllers/album_controller.dart';
 import 'package:bloomy/controllers/song_controller.dart';
+import 'package:bloomy/models/albums.dart';
 import 'package:bloomy/models/song_model.dart';
+import 'package:bloomy/services/album_service.dart';
 import 'package:bloomy/services/music_player_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,6 +21,11 @@ class SongLogic extends GetxController {
   final isDragging = false.obs; //có kéo ko
   var isReady = false.obs; //sóng nhạc đã oke chưa
   var progress = 0.0.obs; //tiến trình bài hát để đổi màu
+  var album = Rxn<AlbumModel>();
+  final albumController = Get.find<AlbumController>();
+
+
+
 
 
   MusicPlayerService get audioPlayer => _playerService;
@@ -28,7 +36,9 @@ class SongLogic extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    final SongModel songTemp = Get.arguments;
+    final args = Get.arguments as Map;
+    final SongModel songTemp = args['song'];
+    final AlbumModel? albumTemp = args['album'];
     if (songController.state.song.value?.id != songTemp.id) {
       Future.delayed(
         Duration.zero,
@@ -42,7 +52,13 @@ class SongLogic extends GetxController {
       );
     }
 
-
+    if (albumTemp != null) {
+      album.value = albumTemp;
+      albumController.songs.value = album.value!.songs;
+      print("Mở từ album: ${albumController.songs.value}");
+    } else {
+      albumController.songs.value = await songController.loadSongs();
+    }
     //trả về thời gian của bài hất
     _playerService.durationStream.listen((d) {
       if (d != null) duration.value = d;

@@ -258,7 +258,9 @@ class _LibraryViewState extends State<LibraryView>
                                   if (selecting) {
                                     logic.toggleSelection(item.id);
                                   } else {
-                                    Get.toNamed(Routes.song.p, arguments: item);
+                                    Get.toNamed(Routes.song.p, arguments: {
+                                      'song': item, // chỉ thêm nếu có
+                                    });
                                   }
                                 },
                                 onLongPress: () {
@@ -291,31 +293,35 @@ class _LibraryViewState extends State<LibraryView>
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Row(
-                                        children: [
-                                          Container(
-                                            height: 100,
-                                            width: 100,
-                                            decoration: BoxDecoration(
+                                      Expanded(
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: 100,
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(5)),
+                                              child: ClipRRect(
                                                 borderRadius:
-                                                    BorderRadius.circular(5)),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(5),
-                                              child: Image.asset(
-                                                item.coverImage,
-                                                fit: BoxFit.cover,
+                                                    BorderRadius.circular(5),
+                                                child: Image.asset(
+                                                  item.coverImage,
+                                                  fit: BoxFit.cover,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          SizedBox(
-                                            width: 15,
-                                          ),
-                                          PrimaryText(
-                                            text: item.title,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ],
+                                            SizedBox(
+                                              width: 15,
+                                            ),
+                                            Expanded(
+                                              child: PrimaryText(
+                                                text: item.title,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                       if (selecting)
                                         Padding(
