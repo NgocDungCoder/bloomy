@@ -30,7 +30,7 @@ class _CustomNavigationBarState extends State<CustomNavigationBar> {
       body: Stack(
         children: [
           _pages[_currentIndex],
-          FloatPlayView(),
+          // FloatPlayView(),
         ],
       ),
       bottomNavigationBar: Container(

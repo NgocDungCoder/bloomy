@@ -87,11 +87,11 @@ final List<GetPage> getPages = [
     page: () => StatView(),
     // binding: SplashBinding(),
   ),
-  GetPage(
-    name: Routes.folder.sp,
-    page: () => FolderView(),
-    binding: FolderBinding(),
-  ),
+  // GetPage(
+  //   name: Routes.folder.sp,
+  //   page: () => FolderView(),
+  //   binding: FolderBinding(),
+  // ),
   GetPage(
     name: Routes.playlist.sp,
     page: () => PlaylistView(),
