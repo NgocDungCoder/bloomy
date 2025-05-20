@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginView extends StatelessWidget {
+  const LoginView({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +19,7 @@ class LoginView extends StatelessWidget {
           onPressed: () {
             Get.back();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.white,
           ),
@@ -25,15 +27,14 @@ class LoginView extends StatelessWidget {
       ),
       body: Column(
         children: [
-          SizedBox(
-            width: 320,
-            height: 320,
+          AspectRatio(
+            aspectRatio: 150 / 100,
             child: Image.asset(
               "assets/logo/logo_bloomy.png",
               fit: BoxFit.cover,
             ),
           ),
-          PrimaryText(
+          const PrimaryText(
             text: "Log in to your account",
             fontWeight: FontWeight.bold,
             fontSize: 25,
@@ -50,16 +51,18 @@ class LoginView extends StatelessWidget {
                 decoration: InputDecoration(
                     hintText: "Email",
                     hintStyle: GoogleFonts.aBeeZee(
-                      color: Color(0xFF8A9A9D),
+                      color: const Color(0xFF8A9A9D),
                     ),
-                    prefixIcon: Icon(Icons.email_outlined),
-                    prefixIconColor: Color(0xFF8A9A9D),
+                    prefixIcon: const Icon(Icons.email_outlined),
+                    prefixIconColor: const Color(0xFF8A9A9D),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 1, color: Colors.white),
+                      borderSide:
+                          const BorderSide(width: 1, color: Colors.white),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 2, color: Colors.white),
+                      borderSide:
+                          const BorderSide(width: 2, color: Colors.white),
                       borderRadius: BorderRadius.circular(15),
                     )),
               ),
@@ -77,26 +80,28 @@ class LoginView extends StatelessWidget {
                 decoration: InputDecoration(
                     hintText: "Password",
                     hintStyle: GoogleFonts.aBeeZee(
-                      color: Color(0xFF8A9A9D),
+                      color: const Color(0xFF8A9A9D),
                     ),
-                    suffixIcon: Icon(Icons.visibility_off),
-                    suffixIconColor: Color(0xFF8A9A9D),
-                    prefixIcon: Icon(Icons.password),
-                    prefixIconColor: Color(0xFF8A9A9D),
+                    suffixIcon: const Icon(Icons.visibility_off),
+                    suffixIconColor: const Color(0xFF8A9A9D),
+                    prefixIcon: const Icon(Icons.password),
+                    prefixIconColor: const Color(0xFF8A9A9D),
                     enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 1, color: Colors.white),
+                      borderSide:
+                          const BorderSide(width: 1, color: Colors.white),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(width: 2, color: Colors.white),
+                      borderSide:
+                          const BorderSide(width: 2, color: Colors.white),
                       borderRadius: BorderRadius.circular(15),
                     )),
               ),
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(vertical: 15),
-            decoration: BoxDecoration(boxShadow: [
+            margin: const EdgeInsets.symmetric(vertical: 15),
+            decoration: BoxDecoration(boxShadow: const [
               BoxShadow(
                   color: Color(0xFF06A0B5), blurRadius: 10, spreadRadius: 5),
             ], borderRadius: BorderRadius.circular(40)),
@@ -108,23 +113,24 @@ class LoginView extends StatelessWidget {
                   Get.toNamed(Routes.main.p);
                 },
                 style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  backgroundColor: Color(0xFF06A0B5),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  backgroundColor: const Color(0xFF06A0B5),
                 ),
-                child: PrimaryText(
+                child: const PrimaryText(
                   text: "Log in",
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ),
-          PrimaryText(
+          const PrimaryText(
             text: "Forget the password",
             color: Color(0xFF06A0B5),
             fontWeight: FontWeight.bold,
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
             child: Row(
               children: <Widget>[
                 Expanded(
@@ -134,7 +140,7 @@ class LoginView extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Text(
                     'or continue with',
                     style: TextStyle(
@@ -152,42 +158,43 @@ class LoginView extends StatelessWidget {
               ],
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(width: 1, color: Colors.white),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(width: 1, color: Colors.white),
+                  ),
+                  child: Align(
+                    child: Image.asset(
+                      "assets/logo/google.png",
+                      fit: BoxFit.cover,
+                      width: 30,
+                      height: 30,
+                    ),
+                  ),
                 ),
-                child: Align(
-                    child: SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: Image.asset(
-                          "assets/logo/google.png",
-                          fit: BoxFit.cover,
-                        ))),
-              ),
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(width: 1, color: Colors.white),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(width: 1, color: Colors.white),
+                  ),
+                  child: Align(
+                    child: Image.asset(
+                      "assets/logo/facebook.png",
+                      fit: BoxFit.cover,
+                      width: 30,
+                      height: 30,
+                    ),
+                  ),
                 ),
-                child: Align(
-                    child: SizedBox(
-                        width: 30,
-                        height: 30,
-                        child: Image.asset(
-                          "assets/logo/facebook.png",
-                          fit: BoxFit.cover,
-                        ))),
-              ),
-            ],
+              ],
+            ),
           ),
         ],
       ),

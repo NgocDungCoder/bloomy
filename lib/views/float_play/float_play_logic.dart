@@ -9,23 +9,23 @@ class FloatPlayLogic extends GetxController {
   final MusicPlayerService _playerService = Get.find<MusicPlayerService>();
   final state = FloatPlayState();
 
-  void playPauseMusic() {
-    if (songController.state.isPlay.value) {
-      _playerService.pause();
-      songController.state.isPlay.value = false;
-    } else {
-      _playerService.resume(); // 👈 chỉ gọi resume nếu đã load bài
-      songController.state.isPlay.value = true;
-    }
-  }
-
-  void bindAnimation(AnimationController controller) {
-    ever(songController.state.isPlay, (isPlaying) {
-      if (isPlaying) {
-        controller.repeat();
-      } else {
-        controller.stop();
-      }
-    });
-  }
+  // void playPauseMusic() {
+  //   if (songController.state.isPlay.value) {
+  //     _playerService.pause();
+  //     songController.state.isPlay.value = false;
+  //   } else {
+  //     _playerService.resume(); // 👈 chỉ gọi resume nếu đã load bài
+  //     songController.state.isPlay.value = true;
+  //   }
+  // }
+  //
+  // void bindAnimation(AnimationController controller) {
+  //   ever(songController.state.isPlay, (isPlaying) {
+  //     if (isPlaying) {
+  //       controller.repeat();
+  //     } else {
+  //       controller.stop();
+  //     }
+  //   });
+  // }
 }
