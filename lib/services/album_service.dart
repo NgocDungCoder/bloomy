@@ -50,6 +50,51 @@ class AlbumService {
     albums.removeWhere((album) => album.id == albumId);
     await saveAlbums(albums);
   }
+
+  Future<void> deleteSongInAlbum(String albumId, String songId) async {
+    final albums = await loadAlbums();
+
+    final index = albums.indexWhere((album) => album.id == albumId);
+    if (index == -1) {
+      print("Không tìm thấy album");
+      return;
+    }
+
+    // Lấy album ra và xoá bài hát khỏi danh sách
+    final album = albums[index];
+    album.songs.removeWhere((song) => song.id == songId);
+
+    // Gán lại album đã thay đổi vào danh sách
+    albums[index] = album;
+
+    // Lưu lại danh sách
+    await saveAlbums(albums);
+
+    print("Đã xoá bài hát $songId khỏi album $albumId");
+  }
+
+  Future<void> addSongToAlbum(String albumId, SongModel song) async {
+    final albums = await loadAlbums();
+
+    final index = albums.indexWhere((album) => album.id == albumId);
+    if (index == -1) {
+      print("Không tìm thấy album");
+      return;
+    }
+
+    // Lấy album ra và xoá bài hát khỏi danh sách
+    final album = albums[index];
+    album.songs.insert(0, song);
+
+    // Gán lại album đã thay đổi vào danh sách
+    albums[index] = album;
+
+    // Lưu lại danh sách
+    await saveAlbums(albums);
+
+    print("Đã thêm bài hát ${song.title} vào album $albumId");
+  }
+
   Future<void> deleteAllAlbums() async {
     final filePath = await _albumFilePath;
     final file = File(filePath);

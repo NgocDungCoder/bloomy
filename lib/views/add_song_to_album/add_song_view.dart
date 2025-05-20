@@ -81,29 +81,29 @@ class AddSongView extends GetView<AddSongLogic> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              children: [
-                                Container(
-                                  height: 70,
-                                  width: 70,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(5)),
-                                  child: ClipRRect(
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  ClipRRect(
                                     borderRadius: BorderRadius.circular(5),
                                     child: Image.asset(
                                       item.coverImage,
                                       fit: BoxFit.cover,
+                                      height: 70,
+                                      width: 70,
                                     ),
                                   ),
-                                ),
-                                SizedBox(
-                                  width: 15,
-                                ),
-                                PrimaryText(
-                                  text: item.title,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ],
+                                  SizedBox(
+                                    width: 15,
+                                  ),
+                                  Expanded(
+                                    child: PrimaryText(
+                                      text: item.title,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                             IconButton(
                               onPressed: isAdded

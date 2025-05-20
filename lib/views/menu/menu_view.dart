@@ -15,7 +15,6 @@ class MenuBinding extends Bindings {
 class MenuView extends GetView<MenuLogic> {
   @override
   Widget build(BuildContext context) {
-    final logic = MenuLogic();
     return Scaffold(
       backgroundColor: Colors.black,
       body: Padding(
@@ -77,10 +76,20 @@ class MenuView extends GetView<MenuLogic> {
               height: 20,
             ),
             buildMenuItem(Icons.music_note_outlined, "Add to playlist", () {
-              Get.toNamed(Routes.addPlaylist.p);
+              Get.toNamed(Routes.addPlaylist.p, arguments: controller.state.song.value);
             }),
             buildMenuItem(Icons.queue_music_outlined, "Add to queue", () {}),
-            buildMenuItem(Icons.playlist_remove, "Remove from playlist", () {}),
+            Obx(
+              () => controller.state.inAlbum.value
+                  ? buildMenuItem(Icons.playlist_remove, "Remove from playlist",
+                      () {
+                      controller.removeFormPlaylist();
+                    })
+                  : buildHideMenuItem(
+                      Icons.playlist_remove,
+                      "Remove from playlist",
+                    ),
+            ),
             buildMenuItem(Icons.local_offer_outlined, "Modify tags", () {}),
             buildMenuItem(Icons.person_outline, "View Artist", () {}),
             buildMenuItem(Icons.album_outlined, "View Album", () {}),
@@ -91,7 +100,7 @@ class MenuView extends GetView<MenuLogic> {
             buildMenuItem(Icons.timer, "Sleep Timer", () {}),
             buildMenuItem(Icons.visibility_off_outlined, "Hide song", () {}),
             buildMenuItem(Icons.remove_circle_outline, "Delete Song", () {
-              controller.deleteSong(controller.state.song.value.id);
+              controller.deleteSong();
               Get.back();
             }),
           ],
@@ -122,6 +131,30 @@ Widget buildMenuItem(IconData icon, String text, VoidCallback onTap) {
           ),
         ],
       ),
+    ),
+  );
+}
+
+Widget buildHideMenuItem(IconData icon, String text) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+    child: Row(
+      children: [
+        Icon(
+          icon,
+          color: Color(0xFF8A9A9D),
+        ),
+        const SizedBox(width: 20),
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: Color(0xFF8A9A9D),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ],
     ),
   );
 }

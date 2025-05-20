@@ -1,3 +1,4 @@
+import 'package:bloomy/controllers/album_controller.dart';
 import 'package:bloomy/views/queue/queue_state.dart';
 import 'package:get/get.dart';
 
@@ -7,6 +8,13 @@ class QueueLogic extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    state.song.value = Get.arguments;
+    final args = Get.arguments as Map;
+    state.song.value = args['song'];
+    state.album.value = args['album'];
+    state.songs.value = args['songs'];
+    print("fffff");
+    print(args['songs']);
+    print(state.songs.value);
+
   }
 }

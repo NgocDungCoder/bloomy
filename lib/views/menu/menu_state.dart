@@ -4,5 +4,6 @@ import 'package:get/get.dart';
 
 class MenuState {
   var song = SongModel(filePath: "", artist: "", id: "", title: "", coverImage: "", duration: Duration(milliseconds: 0),).obs;
-
+  var albumId = "".obs;
+  var inAlbum = false.obs;
 }

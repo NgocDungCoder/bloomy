@@ -39,7 +39,7 @@ class PlaylistView extends GetView<PlaylistLogic> {
           actions: [
             IconButton(
               onPressed: () {
-                Get.toNamed(Routes.addSong.p, arguments: controller.state.album.value.id);
+                Get.toNamed(Routes.addSong.p, arguments: controller.state.album.value);
               },
               icon: Icon(
                 Icons.add_circle_outline,
@@ -110,7 +110,7 @@ class PlaylistView extends GetView<PlaylistLogic> {
                         return InkWell(
                           onTap: () => Get.toNamed(Routes.song.p,arguments: {
                             'song': song,
-                            'albumId': controller.state.album.value.id, // chỉ thêm nếu có
+                            'album': controller.state.album.value, // chỉ thêm nếu có
                           },),
                           child: Container(
                             height: 70,
@@ -118,42 +118,51 @@ class PlaylistView extends GetView<PlaylistLogic> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  children: [
-                                    Container(
-                                      height: 70,
-                                      width: 70,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(5),
-                                        child: Image.asset(
-                                          song.coverImage,
-                                          fit: BoxFit.cover,
+                                Expanded(
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        height: 70,
+                                        width: 70,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(5),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius: BorderRadius.circular(5),
+                                          child: Image.asset(
+                                            song.coverImage,
+                                            fit: BoxFit.cover,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10.0),
-                                      child: Column(
-                                        mainAxisAlignment: MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          PrimaryText(
-                                            text: song.title,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                          PrimaryText(
-                                            text: song.artist,
-                                            fontSize: 13,
-                                            color: Color(0xFF8A9A9D),
-                                          )
-                                        ],
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 10.0),
+                                            child: Column(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                  child: PrimaryText(
+                                                    text: song.title,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                                         
+                                                  PrimaryText(
+                                                    text: song.artist,
+                                                    fontSize: 13,
+                                                    color: Color(0xFF8A9A9D),
+                                                  ),
+                                                                               
+                                              ],
+                                            ),
+                                          
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                                 IconButton(
                                   onPressed: () {},

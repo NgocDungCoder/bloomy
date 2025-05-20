@@ -5,10 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class AddPlaylistView extends StatelessWidget {
+class AddPlaylistBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut<AddPlaylistLogic>(() => AddPlaylistLogic());
+  }
+
+}
+
+class AddPlaylistView extends GetView<AddPlaylistLogic> {
   @override
   Widget build(BuildContext context) {
-    final logic = AddPlaylistLogic();
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -92,14 +99,16 @@ class AddPlaylistView extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(15.0),
-            child: ListView.separated(
+            child: Obx(() => ListView.separated(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  final item = logic.state.albums[index];
-                  return Container(
-                    width: double.infinity,
-                    height: 100,
+                  final item = controller.state.albums[index];
+                  return InkWell(
+                    onTap: () {
+                      controller.addSongToPlaylist(item.id);
+                      Get.back();
+                    },
                     child: Row(
                       children: [
                         Container(
@@ -127,7 +136,7 @@ class AddPlaylistView extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                             PrimaryText(
-                              text: "18 songs",
+                              text: "${item.songs.length} songs",
                               color: Color(0xFF8A9A9D),
                             ),
                           ],
@@ -137,9 +146,9 @@ class AddPlaylistView extends StatelessWidget {
                   );
                 },
                 separatorBuilder: (_, __) => SizedBox(
-                      height: 15,
-                    ),
-                itemCount: logic.state.albums.length),
+                  height: 15,
+                ),
+                itemCount: controller.state.albums.length),),
           )
         ],
       ),
