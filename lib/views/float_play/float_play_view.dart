@@ -51,7 +51,7 @@ class _FloatPlayViewState extends State<FloatPlayView>
     _filingController = AnimationController.unbounded(vsync: this);
 
     _startHideTimer();
-    logic.bindAnimation(_animationController);
+    // logic.bindAnimation(_animationController);
   }
 
 
@@ -86,136 +86,136 @@ class _FloatPlayViewState extends State<FloatPlayView>
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Stack(
+    return Stack(
       children: [
-        if (logic.songController.state.isShow.value)
-          Positioned(
-            right: 30,
-            bottom: logic.state.posY.value + 8,
-            child: AnimatedContainer(
-              duration: Duration(milliseconds: 400),
-              curve: Curves.easeInOut,
-              height: 65,
-              width: _containerWidth,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF0E0E0E),
-                    Color(0xFF0E0E0E),
-                    Color(0xFF102B2D),
-                    Color(0xFF06A0B5),
-                  ],
-                  begin: Alignment.centerRight,
-                  end: Alignment.centerLeft,
-                ),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(100),
-                  bottomLeft: Radius.circular(100),
-                  bottomRight: Radius.circular(100),
-                ),
-              ),
-              child: _isExpanded
-                  ? Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Obx(
-                        () => IconButton(
-                      onPressed: () {
-                        logic.playPauseMusic();
-                        _startHideTimer(); // reset timer khi người dùng tương tác
-                      },
-                      icon: Icon(
-                        logic.songController.state.isPlay.value
-                            ? Icons.pause_outlined
-                            : Icons.play_arrow_rounded,
-                        size: 35,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      _startHideTimer();
-                    },
-                    icon: Icon(
-                      Icons.skip_next_rounded,
-                      color: Colors.white,
-                      size: 35,
-                    ),
-                  ),
-                  Container(
-                    width: 65,
-                  ),
-                ],
-              )
-                  : SizedBox.shrink(),
-            ),
-          ),
-        if (logic.songController.state.isShow.value)
-          Positioned(
-            bottom: logic.state.posY.value + 5,
-            right: 5,
-            child: GestureDetector(
-              onTap: _toggleExpand,
-              onVerticalDragUpdate: (details) {
-                setState(() {
-                  logic.state.posY.value -= details.delta.dy;
-                  logic.state.posY.value = logic.state.posY.value.clamp(70.0, screenHeight);
-                });
-              },
-              onVerticalDragEnd: (details) {
-                _startFling(details.primaryVelocity ?? 0);
-              },
-              child: AnimatedBuilder(
-                animation: _animationController,
-                builder: (context, child) {
-                  return Transform.rotate(
-                    angle: _animationController.value * 2 * pi,
-                    child: child,
-                  );
-                },
-                child: Container(
-                  height: 90,
-                  width: 90,
-                  padding: EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                        colors: [Color(0xFF158085), Color(0xFF00DBFC)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(60),
-                    child: Image.asset(
-                      logic.songController.state.song.value!.coverImage,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        if (logic.songController.state.isShow.value)
-          Positioned(
-            bottom: logic.state.posY.value + 42,
-            right: 42,
-            child: IgnorePointer(
-              ignoring: true,
-              child: Container(
-                height: 15,
-                width: 15,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: LinearGradient(
-                      colors: [Color(0xFF158085), Color(0xFF00DBFC)],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight),
-                ),
-              ),
-            ),
-          ),
+        // if (logic.songController.state.isShow.value)
+        //   Positioned(
+        //     right: 30,
+        //     bottom: logic.state.posY.value + 8,
+        //     child: AnimatedContainer(
+        //       duration: Duration(milliseconds: 400),
+        //       curve: Curves.easeInOut,
+        //       height: 65,
+        //       width: _containerWidth,
+        //       decoration: BoxDecoration(
+        //         gradient: LinearGradient(
+        //           colors: [
+        //             Color(0xFF0E0E0E),
+        //             Color(0xFF0E0E0E),
+        //             Color(0xFF102B2D),
+        //             Color(0xFF06A0B5),
+        //           ],
+        //           begin: Alignment.centerRight,
+        //           end: Alignment.centerLeft,
+        //         ),
+        //         borderRadius: BorderRadius.only(
+        //           topLeft: Radius.circular(100),
+        //           bottomLeft: Radius.circular(100),
+        //           bottomRight: Radius.circular(100),
+        //         ),
+        //       ),
+        //       child: _isExpanded
+        //           ? Row(
+        //         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        //         children: [
+        //           Obx(
+        //                 () => IconButton(
+        //               onPressed: () {
+        //                 logic.playPauseMusic();
+        //                 _startHideTimer(); // reset timer khi người dùng tương tác
+        //               },
+        //               icon: Icon(
+        //                 logic.songController.state.isPlay.value
+        //                     ? Icons.pause_outlined
+        //                     : Icons.play_arrow_rounded,
+        //                 size: 35,
+        //                 color: Colors.white,
+        //               ),
+        //             ),
+        //           ),
+        //           IconButton(
+        //             onPressed: () {
+        //               _startHideTimer();
+        //             },
+        //             icon: Icon(
+        //               Icons.skip_next_rounded,
+        //               color: Colors.white,
+        //               size: 35,
+        //             ),
+        //           ),
+        //           Container(
+        //             width: 65,
+        //           ),
+        //         ],
+        //       )
+        //           : SizedBox.shrink(),
+        //     ),
+        //   ),
+        // if (logic.songController.state.isShow.value)
+        //   Positioned(
+        //     bottom: logic.state.posY.value + 5,
+        //     right: 5,
+        //     child: GestureDetector(
+        //       onTap: _toggleExpand,
+        //       onVerticalDragUpdate: (details) {
+        //         setState(() {
+        //           logic.state.posY.value -= details.delta.dy;
+        //           logic.state.posY.value = logic.state.posY.value.clamp(70.0, screenHeight);
+        //         });
+        //       },
+        //       onVerticalDragEnd: (details) {
+        //         _startFling(details.primaryVelocity ?? 0);
+        //       },
+        //       child: AnimatedBuilder(
+        //         animation: _animationController,
+        //         builder: (context, child) {
+        //           return Transform.rotate(
+        //             angle: _animationController.value * 2 * pi,
+        //             child: child,
+        //           );
+        //         },
+        //         child: Container(
+        //           height: 90,
+        //           width: 90,
+        //           padding: EdgeInsets.all(2),
+        //           decoration: BoxDecoration(
+        //             shape: BoxShape.circle,
+        //             gradient: LinearGradient(
+        //                 colors: [Color(0xFF158085), Color(0xFF00DBFC)],
+        //                 begin: Alignment.topLeft,
+        //                 end: Alignment.bottomRight),
+        //           ),
+        //           child: ClipRRect(
+        //             borderRadius: BorderRadius.circular(60),
+        //             child: Image.asset(
+        //               logic.songController.state.song.value!.coverImage,
+        //               fit: BoxFit.cover,
+        //             ),
+        //           ),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
+        // if (logic.songController.state.isShow.value)
+        //   Positioned(
+        //     bottom: logic.state.posY.value + 42,
+        //     right: 42,
+        //     child: IgnorePointer(
+        //       ignoring: true,
+        //       child: Container(
+        //         height: 15,
+        //         width: 15,
+        //         decoration: BoxDecoration(
+        //           shape: BoxShape.circle,
+        //           gradient: LinearGradient(
+        //               colors: [Color(0xFF158085), Color(0xFF00DBFC)],
+        //               begin: Alignment.topLeft,
+        //               end: Alignment.bottomRight),
+        //         ),
+        //       ),
+        //     ),
+        //   ),
       ],
-    ),);
+    );
   }
 }
