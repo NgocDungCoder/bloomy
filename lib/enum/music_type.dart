@@ -1,0 +1,1 @@
+enum MusicType { songs, albums, artists, folders }
