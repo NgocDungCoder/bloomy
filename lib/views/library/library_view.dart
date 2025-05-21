@@ -21,7 +21,7 @@ class _LibraryViewState extends State<LibraryView>
   void initState() {
     super.initState();
     _animationController =
-        AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
     _animation = Tween<double>(begin: 1, end: 0).animate(_animationController);
   }
 

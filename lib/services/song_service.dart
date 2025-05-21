@@ -5,13 +5,7 @@ import 'package:path_provider/path_provider.dart';
 
 class SongService {
 
-  // Phương thức mới để lấy đường dẫn đến file songs.json
-  Future<String> _getSongJsonPath() async {
-    Directory dir = await getApplicationDocumentsDirectory();
-    return '${dir.path}/songs.json';
-  }
-
-  //save file mp3 vô vùng nhớ dữ liệu của app
+//save file mp3 vô vùng nhớ dữ liệu của app
   Future<String> saveMp3File(File mp3File, String fileName) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     String musicDirPath = '${appDocDir.path}/music';
@@ -25,8 +19,9 @@ class SongService {
   }
 
   Future<void> saveSongInfo(SongModel song) async {
-    String jsonFilePath = await _getSongJsonPath(); // Sử dụng phương thức mới
-    File jsonFile = File(jsonFilePath);
+    Directory dir = await getApplicationDocumentsDirectory();
+    //file songs.json lưu path của file mp3 trong vùng nhớ riêng của app
+    File jsonFile = File('${dir.path}/songs.json');
 
     //lấy danh sách các bài hát ra
     List<SongModel> songs = await getSavedSongs();
@@ -38,8 +33,8 @@ class SongService {
 
   //lấy các bài hát từ sóng.json, biến nó lại thàng SongModel
   Future<List<SongModel>> getSavedSongs() async {
-    String jsonFilePath = await _getSongJsonPath(); // Sử dụng phương thức mới
-    File jsonFile = File(jsonFilePath);
+    Directory dir = await getApplicationDocumentsDirectory();
+    File jsonFile = File('${dir.path}/songs.json');
     if (!jsonFile.existsSync()) return [];
     String content = await jsonFile.readAsString();
     List<dynamic> data = jsonDecode(content);
@@ -47,8 +42,8 @@ class SongService {
   }
 
   Future<void> deleteSongFile() async {
-    String jsonFilePath = await _getSongJsonPath(); // Sử dụng phương thức mới
-    File file = File(jsonFilePath);
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/songs.json');
 
     if (await file.exists()) {
       await file.delete();
@@ -58,9 +53,10 @@ class SongService {
     }
   }
 
+
   Future<void> deleteSong(String songId) async {
-    String jsonFilePath = await _getSongJsonPath(); // Sử dụng phương thức mới
-    File file = File(jsonFilePath);
+    final dir = await getApplicationDocumentsDirectory();
+    final file = File('${dir.path}/songs.json');
 
     if (await file.exists()) {
       final content = await file.readAsString();
@@ -76,51 +72,5 @@ class SongService {
     }
   }
 
-  Future<void> updateSongInfo(SongModel song) async {
-    try {
-      final songs = await getSavedSongs();
-      final index = songs.indexWhere((s) => s.id == song.id);
 
-      if (index != -1) {
-        songs[index] = song;
-        final jsonList = songs.map((s) => s.toJson()).toList();
-        final file = File(await _getSongJsonPath());
-        await file.writeAsString(jsonEncode(jsonList));
-        print("✅ Đã cập nhật thông tin bài hát: ${song.title}");
-      } else {
-        print("❌ Không tìm thấy bài hát để cập nhật: ${song.id}");
-      }
-    } catch (e) {
-      print("❌ Lỗi khi cập nhật thông tin bài hát: $e");
-    }
-  }
-
-  // Thêm phương thức để lưu dữ liệu sóng nhạc riêng biệt nếu cần
-  Future<void> saveWaveformData(String songId, List<double> waveformData) async {
-    try {
-      // Cập nhật bài hát hiện có với dữ liệu sóng nhạc mới
-      final songs = await getSavedSongs();
-      final index = songs.indexWhere((s) => s.id == songId);
-
-      if (index != -1) {
-        final song = songs[index];
-        final updatedSong = SongModel(
-          id: song.id,
-          title: song.title,
-          artist: song.artist,
-          filePath: song.filePath,
-          coverImage: song.coverImage,
-          duration: song.duration,
-          waveformData: waveformData,
-        );
-
-        await updateSongInfo(updatedSong);
-        print("✅ Đã lưu dữ liệu sóng nhạc cho bài hát: ${song.title}");
-      } else {
-        print("❌ Không tìm thấy bài hát để lưu dữ liệu sóng nhạc: $songId");
-      }
-    } catch (e) {
-      print("❌ Lỗi khi lưu dữ liệu sóng nhạc: $e");
-    }
-  }
 }

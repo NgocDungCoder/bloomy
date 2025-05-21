@@ -11,10 +11,14 @@ class QueueLogic extends GetxController {
     final args = Get.arguments as Map;
     state.song.value = args['song'];
     state.album.value = args['album'];
-    state.songs.value = args['songs'];
-    print("fffff");
-    print(args['songs']);
-    print(state.songs.value);
+    state.waitingSongs.value = args['songs'];
+
+    state.playedSongs.add(state.song.value);
+
+    // Lọc ra những bài chưa được chơi
+    final playedIds = state.playedSongs.map((e) => e.id).toSet();
+
+    state.waitingSongs.value = state.waitingSongs.where((song) => !playedIds.contains(song.id)).toList();
 
   }
 }

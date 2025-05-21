@@ -183,7 +183,7 @@ class PlaylistView extends GetView<PlaylistLogic> {
                 ),
               ],
             ),
-            // FloatPlayView(),
+            FloatPlayView(),
           ],
         ));
   }

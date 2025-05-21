@@ -9,10 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 void main() async {
+
   await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
     //làm cho thanh trạng thái ngày giờ trong suốt
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
     ));
@@ -33,6 +34,8 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
+
+
     runApp(App(savedThemeMode: savedThemeMode));
   }, (error, stack) async {
     print("=====> Error in main");
@@ -40,3 +43,4 @@ void main() async {
     print(stack);
   });
 }
+
