@@ -14,14 +14,10 @@ class PlaylistLogic extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _loadSongs();
     state.album.value = Get.arguments;
+
   }
 
-  Future<void> _loadSongs() async {
-    List<SongModel> loaded = await songController.loadSongs();
-     state.songs2.value = loaded;
-  }
 
   void deleteAlbum(String albumId) {
     _albumService.deleteAlbum(albumId);

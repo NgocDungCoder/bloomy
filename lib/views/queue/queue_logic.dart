@@ -4,21 +4,26 @@ import 'package:get/get.dart';
 
 class QueueLogic extends GetxController {
   final state = QueueState();
+  final albumController = Get.find<AlbumController>();
 
   @override
   void onInit() {
     super.onInit();
-    final args = Get.arguments as Map;
-    state.song.value = args['song'];
-    state.album.value = args['album'];
-    state.waitingSongs.value = args['songs'];
+    Future.delayed(Duration.zero, () {
+      state.song.value = albumController.playedSongs.last;
+      state.albumName.value = albumController.albumName.value;
+      print("================>");
+      printPlayedSong();
+    });
 
-    state.playedSongs.add(state.song.value);
+  }
 
-    // Lọc ra những bài chưa được chơi
-    final playedIds = state.playedSongs.map((e) => e.id).toSet();
 
-    state.waitingSongs.value = state.waitingSongs.where((song) => !playedIds.contains(song.id)).toList();
+  void printSong() {
+    albumController.waitingSongs.forEach((song) => print(song));
+  }
 
+  void printPlayedSong() {
+    albumController.playedSongs.forEach((song) => print(song));
   }
 }

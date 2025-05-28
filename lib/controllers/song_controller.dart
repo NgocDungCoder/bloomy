@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:bloomy/models/song_model.dart';
@@ -7,11 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:uuid/uuid.dart';
+import '../services/lyric_service.dart';
 import '../services/song_service.dart';
 
 class SongController extends GetxController {
   final SongService _songService = Get.find<SongService>();
   final SongState state = SongState();
+  final LyricService lyricService = Get.find<LyricService>();
 
   final List<String> imageAssets = List.generate(
     100,
@@ -23,13 +26,22 @@ class SongController extends GetxController {
     state.song.value = SongModel(filePath: "", artist: "", id: '', title: '', coverImage: '', duration: Duration(milliseconds: 0));
     super.onInit();
 
+  }
 
+  Future<void> loadLyrics(SongModel song) async {
+   try {
+     state.lyrics.value = await LyricService.loadFromAsset(song.getLyricAssetPath);
+   } catch (e){
+     print("chưa có file lyrics của cái này: $e");
+     state.lyrics.value = [];
+   }
   }
 
 
 
   // Lấy danh sách đã lưu
   Future<List<SongModel>> loadSongs() => _songService.getSavedSongs();
+
 
 
 //Thêm bài hát mới vô chỗ lưu
@@ -79,6 +91,20 @@ class SongController extends GetxController {
   }
 
 
+
+  void updateCurrentLyric(Duration position) {
+    for (int i = 0; i < state.lyrics.length; i++) {
+      if (position < state.lyrics[i].start) {
+        state.currentLyricIndex.value = (i == 0) ? 0 : i - 1;
+        update(); // hoặc notifyListeners nếu bạn dùng Provider
+        return;
+      }
+    }
+    state.currentLyricIndex.value = state.lyrics.length - 1;
+    update();
+  }
+
+
   Future<void> removeAllSongs() async {
     _songService.deleteSongFile();
 
@@ -123,4 +149,6 @@ class SongController extends GetxController {
       await player.dispose();
     }
   }
+
+
 }

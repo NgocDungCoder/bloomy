@@ -7,7 +7,9 @@ import 'package:bloomy/controllers/song_controller.dart';
 import 'package:bloomy/models/albums.dart';
 import 'package:bloomy/models/song_model.dart';
 import 'package:bloomy/services/album_service.dart';
+import 'package:bloomy/services/lyric_service.dart';
 import 'package:bloomy/services/music_player_service.dart';
+import 'package:bloomy/views/float_play/float_play_logic.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +17,7 @@ class SongLogic extends GetxController {
   final SongController songController = Get.find<SongController>();
   final MusicPlayerService _playerService = Get.find<MusicPlayerService>();
   final playerController = PlayerController(); //  //sóng nhạc
+  final floatPlayLogic = Get.find<FloatPlayLogic>();
   final duration = Duration.zero.obs; //tổng tgian bài hát
   final position = Duration.zero.obs; //thời gian hiện tại
   final sliderValue = 0.0.obs; //vị trí hiện tại
@@ -23,15 +26,15 @@ class SongLogic extends GetxController {
   var progress = 0.0.obs; //tiến trình bài hát để đổi màu
   var album = Rxn<AlbumModel>();
   final albumController = Get.find<AlbumController>();
-
-
-
-
+  var isShuffle = false.obs;
+  final ScrollController lyricScrollController = ScrollController();
 
   MusicPlayerService get audioPlayer => _playerService;
   Timer? _waveformStopTimer;
 
-
+  void printSong() {
+    albumController.waitingSongs.forEach((song) => print(song));
+  }
 
   @override
   void onInit() async {
@@ -46,18 +49,29 @@ class SongLogic extends GetxController {
           songController.state.song.value = songTemp;
           songController.state.isPlay.value = true;
           songController.state.isShow.value = true;
-
+          songController.loadLyrics(songController.state.song.value!);
+          albumController.updateSongsList(songController.state.song.value!);
           _playerService.playMp3(songController.state.song.value!.filePath);
+          floatPlayLogic.state.isPlay.value = true;
         },
       );
     }
 
+    _playerService.positionStream.listen((position) {
+      songController.updateCurrentLyric(position);
+    });
+
     if (albumTemp != null) {
       album.value = albumTemp;
-      albumController.songs.value = album.value!.songs;
-      print("Mở từ album: ${albumController.songs.value}");
+      if (album.value?.id != albumController.albumId.value) {
+        albumController.waitingSongs.value = List.from(album.value!.songs);
+        albumController.albumName.value = album.value!.name;
+      }
+      print("Mở từ album: ${albumController.waitingSongs.value}");
+      printSong();
     } else {
-      albumController.songs.value = await songController.loadSongs();
+      albumController.waitingSongs.value = await songController.loadSongs();
+      printSong();
     }
     //trả về thời gian của bài hất
     _playerService.durationStream.listen((d) {
@@ -70,7 +84,8 @@ class SongLogic extends GetxController {
         if (!isDragging.value) {
           position.value = p;
           sliderValue.value = p.inMilliseconds.toDouble();
-          progress.value = sliderValue.value / duration.value.inMilliseconds.toDouble();
+          progress.value =
+              sliderValue.value / duration.value.inMilliseconds.toDouble();
         }
       },
     );
@@ -78,6 +93,30 @@ class SongLogic extends GetxController {
     Future.delayed(Duration.zero, () {
       prepare();
     });
+    ever(songController.state.currentLyricIndex, (index) {
+      if (lyricScrollController.hasClients) {
+        lyricScrollController.animateTo(
+          index * 37.0, // 40.0 là chiều cao mỗi dòng (tuỳ chỉnh)
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      }
+    });
+
+  }
+
+
+
+  void playNextSong(){
+    _playerService.playNextSong();
+  }
+  void playPreviousSong(){
+    _playerService.playPreviousSong();
+  }
+
+  void shuffleSongs(){
+    print("state: ${isShuffle.value}");
+    albumController.shuffleAlbum(isShuffle.value);
   }
 
   Future<void> prepare() async {
@@ -112,22 +151,26 @@ class SongLogic extends GetxController {
   void onClose() {
     playerController.stopPlayer();
     playerController.dispose();
+    lyricScrollController.dispose();
     super.onClose();
   }
 
+  void printPlayedSong() {
+    albumController.playedSongs.forEach((song) => print(song));
+  }
 
   void playPauseMusic() {
     if (songController.state.isPlay.value) {
       _playerService.pause();
       songController.state.isPlay.value = false;
       playerController.pausePlayer();
+      floatPlayLogic.state.isPlay.value = false;
       print("slider value stop: $sliderValue");
-
     } else {
-
       _playerService.resume();
       songController.state.isPlay.value = true;
       playerController.startPlayer();
+      floatPlayLogic.state.isPlay.value = true;
       playerController.seekTo(sliderValue.value.toInt());
       print("slider value start: $sliderValue");
     }
@@ -147,6 +190,7 @@ class SongLogic extends GetxController {
     sliderValue.value = milliseconds;
     // playerController.seekTo(milliseconds.toInt());
   }
+
   List<Color> getGradientColors(double progress) {
     // Màu khởi đầu (gần đen, với ánh sắc nhẹ)
     const startColor1 = Color(0xFF0D1B2A); // Xám xanh đậm gần đen
@@ -156,12 +200,10 @@ class SongLogic extends GetxController {
     const endColor1 = Color(0xFF00BCD4);
     const endColor2 = Color(0xFF0D1B2A); // Xám xanh đậm gần đen
 
-
     // Tính toán màu trung gian dựa trên tiến trình
     Color color1 = Color.lerp(startColor1, endColor1, progress)!;
     Color color2 = Color.lerp(startColor2, endColor2, progress)!;
 
     return [color1, color2];
   }
-
 }

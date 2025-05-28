@@ -30,4 +30,9 @@ class AlbumModel {
     'coverImage': coverImage,
     'songs': songs.map((song) => song.toJson()).toList(),
   };
+
+  @override
+  String toString() {
+    return 'AlbumModel(id: $id, name: $name, coverImage: $coverImage, songs: ${songs.map((s) => s.title).toList()})';
+  }
 }

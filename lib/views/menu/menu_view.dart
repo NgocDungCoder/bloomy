@@ -13,8 +13,10 @@ class MenuBinding extends Bindings {
 }
 
 class MenuView extends GetView<MenuLogic> {
+
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Padding(
@@ -90,15 +92,14 @@ class MenuView extends GetView<MenuLogic> {
                       "Remove from playlist",
                     ),
             ),
-            buildMenuItem(Icons.local_offer_outlined, "Modify tags", () {}),
+            buildMenuItem(Icons.local_offer_outlined, "Modify tags", () {
+              controller.songService.addLyricPathToSong(controller.state.song.value.id, controller.state.song.value.getLyricAssetPath);
+              print("đã thêm lyric");
+            }),
             buildMenuItem(Icons.person_outline, "View Artist", () {}),
             buildMenuItem(Icons.album_outlined, "View Album", () {}),
             buildMenuItem(Icons.info_outline, "Show Credits", () {}),
-            buildMenuItem(Icons.download_outlined, "Download", () {}),
             buildMenuItem(Icons.share_outlined, "Share", () {}),
-            buildMenuItem(Icons.qr_code, "Generate QR Code", () {}),
-            buildMenuItem(Icons.timer, "Sleep Timer", () {}),
-            buildMenuItem(Icons.visibility_off_outlined, "Hide song", () {}),
             buildMenuItem(Icons.remove_circle_outline, "Delete Song", () {
               controller.deleteSong();
               Get.back();

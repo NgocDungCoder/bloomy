@@ -5,6 +5,11 @@ import 'package:path_provider/path_provider.dart';
 
 class SongService {
 
+  Future<File> _getSongFile() async {
+    final dir = await getApplicationDocumentsDirectory();
+    return File('${dir.path}/songs.json');
+  }
+
 //save file mp3 vô vùng nhớ dữ liệu của app
   Future<String> saveMp3File(File mp3File, String fileName) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
@@ -72,5 +77,27 @@ class SongService {
     }
   }
 
+  Future<void> addLyricPathToSong(String songId, String lyricPath) async {
+    // 1. Lấy danh sách bài hát từ storage
+    List<SongModel> songs = await getSavedSongs();
 
+    // 2. Tìm bài hát cần cập nhật theo ID
+    int index = songs.indexWhere((song) => song.id == songId);
+    if (index == -1) return; // không tìm thấy
+
+    // 3. Tạo bản sao mới với lyricPath đã cập nhật
+    SongModel updatedSong = songs[index].copyWith(lyricPath: lyricPath);
+
+    // 4. Gán lại vào danh sách
+    songs[index] = updatedSong;
+
+    // 5. Ghi lại danh sách đã cập nhật vào file song.json
+    await saveAllSongs(songs);
+  }
+
+  Future<void> saveAllSongs(List<SongModel> songs) async {
+    final jsonList = songs.map((e) => e.toJson()).toList();
+    final file = await _getSongFile(); // hàm này là hàm bạn dùng để lấy file path
+    await file.writeAsString(jsonEncode(jsonList));
+  }
 }

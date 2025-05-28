@@ -5,7 +5,7 @@ import 'package:bloomy/widgets/primary_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 
 class SongBinding extends Bindings {
   @override
@@ -18,8 +18,9 @@ class SongView extends GetView<SongLogic> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.black,
-        body: Obx(() {
+      backgroundColor: Colors.black,
+      body: Obx(
+        () {
           final gradientColors = controller
               .getGradientColors(controller.progress.value.clamp(0.0, 1.0));
 
@@ -195,7 +196,9 @@ class SongView extends GetView<SongLogic> {
                           Row(
                             children: [
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  print(controller.songController.state.lyrics);
+                                },
                                 icon: const Icon(
                                   Icons.share_outlined,
                                   color: Colors.white,
@@ -257,15 +260,25 @@ class SongView extends GetView<SongLogic> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.shuffle,
-                            color: Colors.white,
+                        Obx(
+                          () => IconButton(
+                            onPressed: () {
+                              print("==================>");
+                              controller.isShuffle.toggle();
+                              controller.shuffleSongs();
+                            },
+                            icon: Icon(
+                              Icons.shuffle,
+                              color: controller.isShuffle.value
+                                  ? Colors.white
+                                  : Colors.grey,
+                            ),
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            controller.playPreviousSong();
+                          },
                           icon: const Icon(
                             Icons.skip_previous,
                             color: Colors.white,
@@ -301,7 +314,9 @@ class SongView extends GetView<SongLogic> {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            controller.playNextSong();
+                          },
                           icon: const Icon(
                             Icons.skip_next,
                             color: Colors.white,
@@ -310,14 +325,9 @@ class SongView extends GetView<SongLogic> {
                         ),
                         IconButton(
                           onPressed: () {
-
-                            Get.toNamed(Routes.queue.p, arguments: {
-                              "song":
-                                  controller.songController.state.song.value,
-                              "songs": controller.albumController.songs.value,
-                              if (controller.album.value != null)
-                                "album": controller.album.value,
-                            });
+                            Get.toNamed(
+                              Routes.queue.p,
+                            );
                           },
                           icon: const Icon(
                             Icons.queue_music_outlined,
@@ -331,49 +341,63 @@ class SongView extends GetView<SongLogic> {
                     text: "Lyrics".toUpperCase(),
                     color: const Color(0xFF8A9A9D),
                   ),
-                  Container(
-                    height: 250,
-                    margin: const EdgeInsets.only(top: 10),
-                    padding: const EdgeInsets.all(15),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                          colors: [Color(0xFF39C0D4), Color(0xFF7CEEFF)],
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: ListView(
-                      shrinkWrap: true,
-                      children: [
-                        Text(
-                          style: GoogleFonts.aBeeZee(
-                              fontSize: 16, color: Colors.white),
-                          'Nobody ever loved me like she does\n'
-                          '    Ooh, she does\n'
-                          '    Yes, she does\n\n'
-                          'And if somebody loved like she do me\n'
-                          '    Ooh, she do me\n'
-                          '    Yes, she does\n\n'
-                          'Don\'t let me down\n'
-                          'Don\'t let me down\n'
-                          'Don\'t let me down\n'
-                          'Don\'t let me down\n\n'
-                          'I\'m in love for the first time\n'
-                          'Don\'t you know it\'s gonna last?\n'
-                          'It\'s a love that lasts forever\n'
-                          'It\'s a love that has no past\n\n'
-                          'Don\'t let me down\n'
-                          'Don\'t let me down (ooh)\n'
-                          'Don\'t let me down\n'
-                          'Don\'t let me down',
-                        ),
-                      ],
-                    ),
-                  )
+                  Obx(() => controller.songController.state.lyrics.isEmpty
+                      ? Transform.scale(
+                        scale: 2,
+                        child: Lottie.asset(
+                            'assets/lottie/empty_lyrics.json',
+                            width: 200,
+                            height: 120,
+                            fit: BoxFit.contain,
+                            repeat: true,
+                          ),
+                      )
+                      : Container(
+                          height: 105,
+                          margin: const EdgeInsets.only(top: 10),
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF39C0D4), Color(0xFF7CEEFF)],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                            ),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+
+                            controller: controller.lyricScrollController,
+                            shrinkWrap: true,
+                            itemCount:
+                                controller.songController.state.lyrics.length,
+                            itemBuilder: (context, index) {
+                              final isCurrent = index ==
+                                  controller.songController.state
+                                      .currentLyricIndex.value;
+                              return Container(
+                                alignment: Alignment.topCenter,
+                                padding: EdgeInsets.only(top: 5, bottom: 5),
+                                child: PrimaryText(
+                                  text: controller
+                                      .songController.state.lyrics[index].text,
+                                  color: isCurrent
+                                      ? Color(0xFFFFFA8D)
+                                      : Colors.white,
+                                  fontWeight: isCurrent
+                                      ? FontWeight.bold
+                                      : FontWeight.normal,
+                                ),
+                              );
+                            },
+                          ),
+                        )),
                 ],
               ),
             ),
           );
-        }));
+        },
+      ),
+    );
   }
 }

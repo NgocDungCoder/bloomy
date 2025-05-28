@@ -249,7 +249,7 @@ class _LibraryViewState extends State<LibraryView>
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             final item = logic.state.songs[index];
-
+                            print(item);
                             return Obx(() {
                               final isSelected =
                                   logic.state.selectedIds.contains(item.id);
@@ -354,6 +354,7 @@ class _LibraryViewState extends State<LibraryView>
                             final item = logic.state.albums[index];
                             return InkWell(
                               onTap: () {
+                                print("albummm: ${item.toString()}");
                                 Get.toNamed(Routes.playlist.p, arguments: item);
                               },
                               child: Container(

@@ -106,42 +106,44 @@ class PlaylistView extends GetView<PlaylistLogic> {
                       physics: NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        final song = controller.state.album.value.songs[index];
-                        return InkWell(
-                          onTap: () => Get.toNamed(Routes.song.p,arguments: {
-                            'song': song,
-                            'album': controller.state.album.value, // chỉ thêm nếu có
-                          },),
-                          child: Container(
-                            height: 70,
-                            margin: EdgeInsets.only(top: 10, bottom: 10, left: 20),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        height: 70,
-                                        width: 70,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(5),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(5),
-                                          child: Image.asset(
-                                            song.coverImage,
-                                            fit: BoxFit.cover,
+                        return Obx((){
+                          final song = controller.state.album.value.songs[index];
+
+                          return InkWell(
+                            onTap: () => Get.toNamed(Routes.song.p,arguments: {
+                              'song': song,
+                              'album': controller.state.album.value, // chỉ thêm nếu có
+                            },),
+                            child: Container(
+                              height: 70,
+                              margin: EdgeInsets.only(top: 10, bottom: 10, left: 20),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          height: 70,
+                                          width: 70,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(5),
+                                          ),
+                                          child: ClipRRect(
+                                            borderRadius: BorderRadius.circular(5),
+                                            child: Image.asset(
+                                              song.coverImage,
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(left: 10.0),
+                                        Expanded(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left: 10.0),
                                             child: Column(
                                               mainAxisAlignment: MainAxisAlignment.center,
                                               crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
+                                              CrossAxisAlignment.start,
                                               children: [
                                                 Expanded(
                                                   child: PrimaryText(
@@ -149,32 +151,33 @@ class PlaylistView extends GetView<PlaylistLogic> {
                                                     fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
-                                                                         
-                                                  PrimaryText(
-                                                    text: song.artist,
-                                                    fontSize: 13,
-                                                    color: Color(0xFF8A9A9D),
-                                                  ),
-                                                                               
+
+                                                PrimaryText(
+                                                  text: song.artist,
+                                                  fontSize: 13,
+                                                  color: Color(0xFF8A9A9D),
+                                                ),
+
                                               ],
                                             ),
-                                          
+
+                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
-                                ),
-                                IconButton(
-                                  onPressed: () {},
-                                  icon: Icon(
-                                    Icons.more_vert_outlined,
-                                    color: Colors.white,
+                                  IconButton(
+                                    onPressed: () {},
+                                    icon: Icon(
+                                      Icons.more_vert_outlined,
+                                      color: Colors.white,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        });
                       },
                       separatorBuilder: (_, __) => SizedBox(
                             height: 15,

@@ -1,7 +1,24 @@
+import 'package:bloomy/controllers/album_controller.dart';
+import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 
-class MusicPlayerService {
+import '../controllers/song_controller.dart';
+
+class MusicPlayerService extends GetxController {
   final AudioPlayer _audioPlayer = AudioPlayer();
+  final albumController = Get.find<AlbumController>();
+  final songController = Get.find<SongController>();
+
+  @override
+  void onInit() {
+    super.onInit();
+
+    _audioPlayer.processingStateStream.listen((state) {
+      if (state == ProcessingState.completed) {
+        playNextSong(); // chuyển bài
+      }
+    });
+  }
 
   Future<void> playMp3(String filePath) async {
     try {
@@ -9,6 +26,35 @@ class MusicPlayerService {
       await _audioPlayer.play();
     } catch (e) {
       print("Error playing audio: $e");
+    }
+  }
+
+  void playNextSong() {
+    print("befor empty:");
+    albumController.playedSongs.forEach((song) => print(song));
+    if (albumController.waitingSongs.isEmpty) {
+      albumController.waitingSongs.value = List.from(albumController.playedSongs);
+      albumController.playedSongs.clear();
+    }
+
+    final next = albumController.waitingSongs.removeAt(0);
+
+    songController.state.song.value = next;
+    songController.loadLyrics(next);
+    albumController.updateSongsList(next);
+    playMp3(next.filePath);
+  }
+
+  void playPreviousSong() {
+    if (albumController.playedSongs.length > 1) {
+      final previous =
+          albumController.playedSongs[albumController.playedSongs.length - 2];
+      songController.state.song.value = previous;
+      songController.loadLyrics(previous);
+      albumController.updatePreviousSong(albumController.playedSongs.last);
+      playMp3(previous.filePath);
+    } else {
+      print("Danh sách chờ rỗng.");
     }
   }
 
@@ -24,10 +70,10 @@ class MusicPlayerService {
     await _audioPlayer.play(); // 👈 chính hàm này sẽ "resume"
   }
 
-
   void dispose() {
     _audioPlayer.dispose();
   }
+
   /// ✅ Thêm hàm seek
   void seek(Duration position) {
     _audioPlayer.seek(position);
@@ -41,6 +87,4 @@ class MusicPlayerService {
 
   /// ✅ Getter nếu bạn cần giá trị thời lượng hiện tại ngay
   Duration? get duration => _audioPlayer.duration;
-
-
 }

@@ -18,17 +18,17 @@ void main() async {
       statusBarIconBrightness: Brightness.light,
     ));
 
-    await initServices();
     await initControllers();
+    await initServices();
 
     requestStoragePermission();
 
     // await Firebase.initializeApp(
     //     options: DefaultFirebaseOptions.currentPlatform,);
-
+    //
     // await initDeepLink();
-    // await initServices();
-    // await initControllers();
+    await initServices();
+    await initControllers();
 
     final savedThemeMode = await AdaptiveTheme.getThemeMode();
     WidgetsFlutterBinding.ensureInitialized();

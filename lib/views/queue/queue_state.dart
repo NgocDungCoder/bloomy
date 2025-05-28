@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 class QueueState {
   var song = SongModel(filePath: '', artist: '', id: '', title: '', coverImage: '', duration: Duration(milliseconds: 0)).obs;
-  var album = Rxn<AlbumModel>();
-  var waitingSongs = <SongModel>[].obs;
-  var playedSongs = <SongModel>[].obs;
+  var albumName = "".obs;
+// var waitingSongs = <SongModel>[].obs;
+  // var playedSongs = <SongModel>[].obs;
 }
