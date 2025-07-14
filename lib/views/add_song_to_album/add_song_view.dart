@@ -87,7 +87,7 @@ class AddSongView extends GetView<AddSongLogic> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(5),
                                     child: Image.asset(
-                                      item.coverImage,
+                                      item.coverImage ?? "assets/images/img999.jpg",
                                       fit: BoxFit.cover,
                                       height: 70,
                                       width: 70,

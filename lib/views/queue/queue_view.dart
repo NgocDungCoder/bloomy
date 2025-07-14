@@ -34,13 +34,12 @@ class QueueView extends GetView<QueueLogic> {
                         text: "Playing from playlist:".toUpperCase(),
                         fontSize: 12,
                       ),
-                      PrimaryText(
-                        text: controller.state.albumName.value != ""
-                            ? controller.state.albumName.value
-                            : "Danh sách chung",
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF7CEEFF),
-                      )
+                      Obx(() => PrimaryText(
+                            text: controller.state.albumName.value,
+                            maxLine: 2,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF7CEEFF),
+                          ))
                     ],
                   ),
                 ),
@@ -78,7 +77,11 @@ class QueueView extends GetView<QueueLogic> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(5),
                                 child: Image.asset(
-                                  controller.state.song.value.coverImage != "" ? controller.state.song.value.coverImage : "assets/images/img1.jpg",
+                                  (controller.state.song.value.coverImage
+                                              ?.isNotEmpty ??
+                                          false)
+                                      ? controller.state.song.value.coverImage!
+                                      : "assets/images/img999.jpg",
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -90,10 +93,11 @@ class QueueView extends GetView<QueueLogic> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    SizedBox(
-                                      width: 250,
+                                    FittedBox(
+                                      fit: BoxFit.scaleDown,
                                       child: PrimaryText(
                                         text: controller.state.song.value.title,
+                                        maxLine: 2,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -130,179 +134,105 @@ class QueueView extends GetView<QueueLogic> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            // Obx(
-            //   () => SizedBox(
-            //     height: 600,
-            //     child: ListView.separated(
-            //       physics: NeverScrollableScrollPhysics(),
-            //       shrinkWrap: true,
-            //       itemBuilder: (context, index) {
-            //         final song = controller.state.waitingSongs[index];
-            //         return InkWell(
-            //           onTap: () => Get.toNamed(Routes.song.p),
-            //           child: Container(
-            //             height: 70,
-            //             child: Row(
-            //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            //               children: [
-            //                 Expanded(
-            //                   child: Row(
-            //                     children: [
-            //                       Container(
-            //                         height: 70,
-            //                         width: 70,
-            //                         decoration: BoxDecoration(
-            //                           borderRadius: BorderRadius.circular(5),
-            //                         ),
-            //                         child: ClipRRect(
-            //                           borderRadius: BorderRadius.circular(5),
-            //                           child: Image.asset(
-            //                             song.coverImage,
-            //                             fit: BoxFit.cover,
-            //                           ),
-            //                         ),
-            //                       ),
-            //                       Expanded(
-            //                         child: Padding(
-            //                           padding:
-            //                               const EdgeInsets.only(left: 10.0),
-            //                           child: Column(
-            //                             mainAxisAlignment:
-            //                                 MainAxisAlignment.center,
-            //                             crossAxisAlignment:
-            //                                 CrossAxisAlignment.start,
-            //                             children: [
-            //                               Expanded(
-            //                                 child: PrimaryText(
-            //                                   text: song.title,
-            //                                   fontWeight: FontWeight.bold,
-            //                                 ),
-            //                               ),
-            //                               PrimaryText(
-            //                                 text: song.artist,
-            //                                 fontSize: 13,
-            //                                 color: Color(0xFF8A9A9D),
-            //                               ),
-            //                             ],
-            //                           ),
-            //                         ),
-            //                       ),
-            //                     ],
-            //                   ),
-            //                 ),
-            //                 IconButton(
-            //                   onPressed: () {},
-            //                   icon: Icon(
-            //                     Icons.swap_vert,
-            //                     color: Colors.white,
-            //                   ),
-            //                 ),
-            //               ],
-            //             ),
-            //           ),
-            //         );
-            //       },
-            //       separatorBuilder: (_, __) => SizedBox(
-            //         height: 15,
-            //       ),
-            //       itemCount: controller.state.waitingSongs.length,
-            //     ),
-            //
-            //   ),
-            // ),
-           SizedBox(
-                  height: 600,
-                  child: Obx(() => ReorderableListView.builder(
-                    key: ValueKey(controller.albumController.refreshTrigger.value),
-                    shrinkWrap: true,
-                    proxyDecorator: (child, index, animation) {
-                      return Material(
-                        elevation: 4,
-                        // Thêm bóng khi kéo
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.grey[900]!.withOpacity(0.9),
-                        // Màu nền tối khi kéo
-                        child: child,
-                      );
-                    },
-                    itemCount: controller.albumController.waitingSongs.length,
-                    itemBuilder: (context, index) {
-                      final song = controller.albumController.waitingSongs[index];
-                      return InkWell(
-                        key: Key(song.filePath),
-                        onTap: () => Get.toNamed(Routes.song.p),
-                        child: Container(
-                          height: 70,
-                          margin: EdgeInsets.only(bottom: 8, top: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      height: 70,
-                                      width: 70,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(5),
-                                        child: Image.asset(
-                                          song.coverImage != "" ? song.coverImage : "assets/images/img1.jpg",
-                                          fit: BoxFit.cover,
-                                        ),
+            SizedBox(
+              height: 600,
+              child: Obx(
+                () => ReorderableListView.builder(
+                  key:
+                      ValueKey(controller.albumController.refreshTrigger.value),
+                  shrinkWrap: true,
+                  proxyDecorator: (child, index, animation) {
+                    return Material(
+                      elevation: 4,
+                      // Thêm bóng khi kéo
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.grey[900]!.withOpacity(0.9),
+                      // Màu nền tối khi kéo
+                      child: child,
+                    );
+                  },
+                  itemCount: controller.albumController.waitingSongs.length,
+                  itemBuilder: (context, index) {
+                    final song = controller.albumController.waitingSongs[index];
+                    return InkWell(
+                      key: Key(song.filePath),
+                      onTap: () => Get.toNamed(Routes.song.p),
+                      child: Container(
+                        height: 70,
+                        margin: EdgeInsets.only(bottom: 8, top: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Row(
+                                children: [
+                                  Container(
+                                    height: 70,
+                                    width: 70,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: Image.asset(
+                                        song.coverImage ??
+                                            "assets/images/img999.jpg",
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding:
-                                        const EdgeInsets.only(left: 10.0),
-                                        child: Column(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                          children: [
-                                            SizedBox(
-                                              width: 255,
-                                              child: PrimaryText(
-                                                text: song.title,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(left: 10.0),
+                                      child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          SizedBox(
+                                            width: 255,
+                                            child: PrimaryText(
+                                              text: song.title,
+                                              maxLine: 2,
+                                              fontWeight: FontWeight.bold,
                                             ),
-                                            PrimaryText(
-                                              text: song.artist,
-                                              fontSize: 13,
-                                              color: Color(0xFF8A9A9D),
-                                            ),
-                                          ],
-                                        ),
+                                          ),
+                                          PrimaryText(
+                                            text: song.artist,
+                                            fontSize: 13,
+                                            color: Color(0xFF8A9A9D),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                              Icon(
-                                Icons.swap_vert,
-                                color: Colors.white,
-                              ),
-                            ],
-                          ),
+                            ),
+                            Icon(
+                              Icons.swap_vert,
+                              color: Colors.white,
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                    onReorder: (oldIndex, newIndex) {
-                      if (oldIndex < newIndex) {
-                        newIndex -= 1;
-                      }
-                      final item =
-                      controller.albumController.waitingSongs.removeAt(oldIndex);
-                      controller.albumController.waitingSongs.insert(newIndex, item);
-                      controller.albumController.waitingSongs.refresh();
-                    },
-                  ),),
+                      ),
+                    );
+                  },
+                  onReorder: (oldIndex, newIndex) {
+                    if (oldIndex < newIndex) {
+                      newIndex -= 1;
+                    }
+                    final item = controller.albumController.waitingSongs
+                        .removeAt(oldIndex);
+                    controller.albumController.waitingSongs
+                        .insert(newIndex, item);
+                    controller.albumController.waitingSongs.refresh();
+                  },
                 ),
+              ),
+            ),
           ],
         ),
       ),

@@ -105,7 +105,7 @@ class LoginView extends StatelessWidget {
               height: 65,
               child: ElevatedButton(
                 onPressed: () {
-                  Get.toNamed(Routes.main.p);
+                  Get.offNamed(Routes.main.p);
                 },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -160,7 +160,7 @@ class LoginView extends StatelessWidget {
                 height: 50,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(width: 1, color: Colors.white),
+                  border: Border.all(width: 2, color: Colors.white),
                 ),
                 child: Align(
                     child: SizedBox(
@@ -176,7 +176,7 @@ class LoginView extends StatelessWidget {
                 height: 50,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(width: 1, color: Colors.white),
+                  border: Border.all(width: 2, color: Colors.white),
                 ),
                 child: Align(
                     child: SizedBox(

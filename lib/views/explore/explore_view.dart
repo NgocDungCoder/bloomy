@@ -2,6 +2,7 @@ import 'package:bloomy/views/explore/explore_logic.dart';
 import 'package:bloomy/widgets/primary_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ExploreView extends StatelessWidget {
@@ -9,7 +10,7 @@ class ExploreView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final logic = ExploreLogic();
+    final logic = Get.find<ExploreLogic>();
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,

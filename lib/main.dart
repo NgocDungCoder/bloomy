@@ -17,9 +17,9 @@ void main() async {
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
     ));
-
-    await initControllers();
     await initServices();
+    await initControllers();
+
 
     requestStoragePermission();
 

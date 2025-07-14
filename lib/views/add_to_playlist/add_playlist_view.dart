@@ -127,19 +127,22 @@ class AddPlaylistView extends GetView<AddPlaylistLogic> {
                         SizedBox(
                           width: 15,
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            PrimaryText(
-                              text: item.name,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            PrimaryText(
-                              text: "${item.songs.length} songs",
-                              color: Color(0xFF8A9A9D),
-                            ),
-                          ],
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              PrimaryText(
+                                text: item.name,
+                                maxLine: 2,
+                                fontWeight: FontWeight.bold,
+                              ),
+                              PrimaryText(
+                                text: "${item.songs.length} songs",
+                                color: Color(0xFF8A9A9D),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),

@@ -1,17 +1,35 @@
 import 'package:bloomy/views/explore/explore_view.dart';
 import 'package:bloomy/views/float_play/float_play_view.dart';
+import 'package:bloomy/views/home/home_logic.dart';
 import 'package:bloomy/views/home/home_view.dart';
+import 'package:bloomy/views/library/library_logic.dart';
 import 'package:bloomy/views/library/library_view.dart';
+import 'package:bloomy/views/main/main_logic.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class CustomNavigationBar extends StatefulWidget {
-  const CustomNavigationBar({super.key});
+import '../explore/explore_logic.dart';
 
+class MainBinding implements Bindings {
   @override
-  _CustomNavigationBarState createState() => _CustomNavigationBarState();
+  void dependencies() {
+    Get.lazyPut(() => MainLogic());
+
+    /// Init all controllers that are used in the main screen
+    Get.lazyPut(() => HomeLogic(Get.find(), Get.find()));
+    Get.lazyPut(() => ExploreLogic());
+    Get.lazyPut(() => LibraryLogic(Get.find(), Get.find()));
+  }
 }
 
-class _CustomNavigationBarState extends State<CustomNavigationBar> {
+class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
+  @override
+  _MainPageState createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
   // Biến để theo dõi chỉ số tab hiện tại
   int _currentIndex = 0;
 

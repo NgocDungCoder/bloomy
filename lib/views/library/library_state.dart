@@ -18,13 +18,13 @@ class LibraryState {
     MusicType.songs,
     MusicType.albums,
     MusicType.artists,
-    MusicType.folders,
+    MusicType.podcasts,
   ];
 
   final songs = <SongModel>[].obs;
   final albums = <AlbumModel>[].obs;
   final artists = <Artist>[].obs;
-  final folders = <Folder>[].obs;
+  final podcasts = <Folder>[].obs;
 
   // final List<Album> recentList = [
   //   Album(name: "Made For You", image: "assets/images/img5.jpg"),

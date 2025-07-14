@@ -24,6 +24,20 @@ class AlbumModel {
     );
   }
 
+  AlbumModel copyWith({
+    String? id,
+    String? name,
+    String? coverImage,
+    List<SongModel>? songs,
+  }) {
+    return AlbumModel(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      coverImage: coverImage ?? this.coverImage,
+      songs: songs ?? this.songs,
+    );
+  }
+
   Map<String, dynamic> toJson() => {
     'id': id,
     'name': name,

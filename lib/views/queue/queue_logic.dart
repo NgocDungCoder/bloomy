@@ -11,9 +11,7 @@ class QueueLogic extends GetxController {
     super.onInit();
     Future.delayed(Duration.zero, () {
       state.song.value = albumController.playedSongs.last;
-      state.albumName.value = albumController.albumName.value;
-      print("================>");
-      printPlayedSong();
+      state.albumName.value = albumController.albumName.value != "" ? albumController.albumName.value : "Danh sách chung";
     });
 
   }

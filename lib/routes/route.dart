@@ -1,14 +1,14 @@
 import 'package:bloomy/views/add_song_to_album/add_song_view.dart';
 import 'package:bloomy/views/add_to_playlist/add_playlist_view.dart';
-import 'package:bloomy/views/create_new/create_view.dart';
+import 'package:bloomy/views/create_new_playlist/create_view.dart';
+import 'package:bloomy/views/edit_album/edit_album_view.dart';
 import 'package:bloomy/views/folder/folder_view.dart';
 import 'package:bloomy/views/home/home_view.dart';
+import 'package:bloomy/views/liked_song/liked_view.dart';
 import 'package:bloomy/views/login/login_view.dart';
 import 'package:bloomy/views/main/main_view.dart';
 import 'package:bloomy/views/menu/menu_logic.dart';
 import 'package:bloomy/views/menu/menu_view.dart';
-import 'package:bloomy/views/music_local/music_view.dart';
-import 'package:bloomy/views/playlist/playlist_view.dart';
 import 'package:bloomy/views/queue/queue_view.dart';
 import 'package:bloomy/views/signIn/singIn_view.dart';
 import 'package:bloomy/views/song/song_view.dart';
@@ -16,6 +16,8 @@ import 'package:bloomy/views/stat/stat_view.dart';
 import 'package:bloomy/views/welcome/welcome_view.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 
+import '../views/add_music_local/add_music_view.dart';
+import '../views/album/playlist_view.dart';
 import '../views/splash/splash_view.dart';
 
 class RoutePath {
@@ -69,6 +71,8 @@ abstract class Routes {
   static const main = RoutePath('/main');
   static const musicLocal = RoutePath('/musicLocal');
   static const addSong = RoutePath('/addSong');
+  static const likedSong = RoutePath('/likedSong');
+  static const editAlbum = RoutePath('/editAlbum');
 }
 
 final List<GetPage> getPages = [
@@ -80,11 +84,13 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.home.sp,
     page: () => HomeView(),
+    binding: HomeBinding(),
     // binding: SplashBinding(),
   ),
   GetPage(
     name: Routes.stat.sp,
     page: () => StatView(),
+    binding: StatBinding(),
     // binding: SplashBinding(),
   ),
   GetPage(
@@ -103,6 +109,11 @@ final List<GetPage> getPages = [
     binding: SongBinding(),
   ),
   GetPage(
+    name: Routes.editAlbum.sp,
+    page: () => EditAlbumView(),
+    binding: EditAlbumBinding(),
+  ),
+  GetPage(
     name: Routes.menu.sp,
     page: () => MenuView(),
     binding: MenuBinding(),
@@ -116,6 +127,11 @@ final List<GetPage> getPages = [
     name: Routes.queue.sp,
     page: () => QueueView(),
     binding: QueueBinding(),
+  ),
+  GetPage(
+    name: Routes.likedSong.sp,
+    page: () => LikedView(),
+    binding: LikedBinding(),
   ),
   GetPage(
     name: Routes.create.sp,
@@ -144,10 +160,11 @@ final List<GetPage> getPages = [
   ),
   GetPage(
     name: Routes.main.sp,
-    page: () => CustomNavigationBar(),
+    page: () => MainPage(),
+    binding: MainBinding(),
   ),
   GetPage(
     name: Routes.musicLocal.sp,
-    page: () => OfflineMusicPlayer(),
+    page: () => AddMusicLocal(),
   ),
 ].toList();

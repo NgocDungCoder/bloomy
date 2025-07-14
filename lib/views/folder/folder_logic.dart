@@ -10,7 +10,6 @@ class FolderLogic extends GetxController {
   void onInit() async {
     super.onInit();
     state.albumList.value = await _albumService.loadAlbums();
-    print("đã tải");
   }
 
 }

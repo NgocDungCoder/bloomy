@@ -52,7 +52,6 @@ class _FloatPlayViewState extends State<FloatPlayView>
     _filingController = AnimationController.unbounded(vsync: this);
 
     _startHideTimer();
-    print("khởi tạo lại");
     if (!logic.state.isPlay.value) {
       _animationController.stop();
     }
@@ -206,7 +205,7 @@ class _FloatPlayViewState extends State<FloatPlayView>
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(60),
                       child: Image.asset(
-                        logic.songController.state.song.value!.coverImage,
+                        logic.songController.state.song.value?.coverImage ?? "",
                         fit: BoxFit.cover,
                       ),
                     ),

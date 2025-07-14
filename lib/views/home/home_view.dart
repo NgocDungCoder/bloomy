@@ -6,12 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+class HomeBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => HomeLogic(Get.find(), Get.find()));
+  }
+}
+
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final logic = HomeLogic();
+    final logic = Get.find<HomeLogic>();
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
@@ -53,7 +60,7 @@ class HomeView extends StatelessWidget {
                             borderRadius: BorderRadius.circular(100),
                             // 👈 đảm bảo bo tròn
                             child: Image.asset(
-                              "assets/logo/avatar.png",
+                              "assets/images/img999.jpg",
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -82,24 +89,19 @@ class HomeView extends StatelessWidget {
                             color: Colors.white,
                           ),
                         ),
-                        const SizedBox(
-                          width: 10,
-                        ),
                         IconButton(
-                          onPressed: () {
-                            Get.toNamed(Routes.musicLocal.p);
-                          },
+                          onPressed: () {},
                           icon: const Icon(
                             Icons.notifications_none_outlined,
                             color: Colors.white,
                           ),
                         ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        const Icon(
-                          Icons.settings_outlined,
-                          color: Colors.white,
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.settings_outlined,
+                            color: Colors.white,
+                          ),
                         ),
                       ],
                     )
@@ -114,52 +116,59 @@ class HomeView extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 2.5,
-                ),
-                itemCount: logic.state.albumList.length,
-                itemBuilder: (context, index) {
-                  final album = logic.state.albumList[index];
-                  return InkWell(
-                    onTap: () => Get.toNamed(Routes.musicLocal.p),
-                    child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: const Color(0xFF436369),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 75,
-                              height: 75,
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10)),
-                                child: Image.asset(
-                                  album.coverImage,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
+              Obx(() => GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 2.5,
+                    ),
+                    itemCount: logic.state.continueList.length,
+                    itemBuilder: (context, index) {
+                      final song = logic.state.continueList[index];
+                      return InkWell(
+                        onTap: () => Get.toNamed(Routes.song.p, arguments: {
+                          'song': song,
+                        }),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: const Color(0xFF436369),
                             ),
-                            Expanded(
-                                child: Padding(
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 75,
+                                  height: 75,
+                                  child: ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(10),
+                                        bottomLeft: Radius.circular(10)),
+                                    child: Image.asset(
+                                      song.coverImage ??
+                                          "assets/images/img999.jpg",
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: PrimaryText(
-                                      text: album.name,
+                                      text: song.title,
+                                      maxLine: 2,
                                       fontSize: 10,
-                                    ))),
-                          ],
-                        )),
-                  );
-                },
-              ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )),
+                      );
+                    },
+                  )),
 
               //Your top mixes
               Padding(
@@ -171,60 +180,65 @@ class HomeView extends StatelessWidget {
               ),
               SizedBox(
                 height: 250,
-                child: ListView.separated(
+                child: Obx(() => ListView.separated(
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
                       final mix = logic.state.mixesList[index];
-                      return Stack(
-                        children: [
-                          Container(
-                            height: 250,
-                            width: 250,
-                            child: Image.asset(
-                              mix.coverImage,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Positioned(
-                            top: 0,
-                            child: Container(
-                              height: 40,
+                      return InkWell(
+                        onTap: () {
+                          Get.toNamed(Routes.playlist.p, arguments: mix);
+                        },
+                        child: Stack(
+                          children: [
+                            Container(
+                              height: 250,
                               width: 250,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    colors: [
-                                      Colors.black,
-                                      Colors.transparent,
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter),
+                              child: Image.asset(
+                                mix.coverImage,
+                                fit: BoxFit.cover,
                               ),
                             ),
-                          ),
-                          Positioned(
-                            top: 15,
-                            left: 30,
-                            child: PrimaryText(
-                              text: mix.name,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                            Positioned(
+                              top: 0,
+                              child: Container(
+                                height: 40,
+                                width: 250,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                      colors: [
+                                        Colors.black,
+                                        Colors.transparent,
+                                      ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter),
+                                ),
+                              ),
                             ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            child: Container(
-                              height: 12,
-                              width: 250,
-                              color: Colors.yellow,
+                            Positioned(
+                              top: 15,
+                              left: 30,
+                              child: PrimaryText(
+                                text: mix.name,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              bottom: 0,
+                              child: Container(
+                                height: 12,
+                                width: 250,
+                                color: Colors.yellow,
+                              ),
+                            ),
+                          ],
+                        ),
                       );
                     },
                     separatorBuilder: (context, index) => SizedBox(
                           width: 20,
                         ),
-                    itemCount: logic.state.mixesList.length),
+                    itemCount: logic.state.mixesList.length)),
               ),
 
               //Base on your recent listening
@@ -235,65 +249,67 @@ class HomeView extends StatelessWidget {
                   fontSize: 18,
                 ),
               ),
-              GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: logic.state.recentList.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 20,
-                    crossAxisSpacing: 20,
-                    childAspectRatio: 0.8),
-                itemBuilder: (context, index) {
-                  final recent = logic.state.recentList[index];
-                  return SizedBox(
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: Image.asset(
-                              recent.coverImage,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          bottom: 0,
-                          child: Container(
-                            height: 40,
-                            width: 177,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  Colors.black,
-                                  Colors.transparent,
-                                ],
-                                begin: Alignment.bottomCenter,
-                                end: Alignment.topCenter,
+              Obx(() => GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: logic.state.recentList.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 20,
+                        crossAxisSpacing: 20,
+                        childAspectRatio: 0.8),
+                    itemBuilder: (context, index) {
+                      final recent = logic.state.recentList[index];
+                      return InkWell(
+                        onTap: () =>
+                            Get.toNamed(Routes.playlist.p, arguments: recent),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
                               ),
-                              borderRadius: BorderRadius.circular(5),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: Image.asset(
+                                  recent.coverImage,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
-                          ),
+                            Positioned(
+                              bottom: 0,
+                              child: Container(
+                                height: 40,
+                                width: 177,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.black,
+                                      Colors.transparent,
+                                    ],
+                                    begin: Alignment.bottomCenter,
+                                    end: Alignment.topCenter,
+                                  ),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 10,
+                              left: 30,
+                              child: PrimaryText(
+                                text: recent.name,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        Positioned(
-                          bottom: 10,
-                          left: 30,
-                          child: PrimaryText(
-                            text: recent.name,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+                      );
+                    },
+                  )),
             ],
           ),
         ),

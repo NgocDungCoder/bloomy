@@ -64,8 +64,9 @@ class SongView extends GetView<SongLogic> {
                                 Obx(() {
                                   if (controller.album.value != null) {
                                     return PrimaryText(
-                                      text: controller.album.value!.name,
+                                      text: controller.album.value?.name ?? "",
                                       fontWeight: FontWeight.bold,
+                                      maxLine: 2,
                                       color: Color(0xFF7CEEFF),
                                     );
                                   } else {
@@ -108,11 +109,12 @@ class SongView extends GetView<SongLogic> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(5),
                               child: Image.asset(
-                                controller.songController.state.song.value!
-                                        .coverImage.isEmpty
-                                    ? 'assets/images/img1.jpg'
-                                    : controller.songController.state.song
-                                        .value!.coverImage,
+                                controller.songController.state.song.value
+                                            ?.coverImage?.isNotEmpty ??
+                                        false
+                                    ? controller.songController.state.song
+                                        .value!.coverImage!
+                                    : 'assets/images/img999.jpg',
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -167,18 +169,21 @@ class SongView extends GetView<SongLogic> {
                     ),
                   ),
                   Obx(
-                    () => Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: PrimaryText(
-                        text: (controller.songController.state.song.value!.title
-                                .isNotEmpty)
-                            ? controller.songController.state.song.value!.title
-                            : 'No name ',
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
+                        () => Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 15.0),
+                      child: SizedBox(
+                        width: double.infinity, // đảm bảo có ràng buộc chiều rộng
+                        child: PrimaryText(
+                          text: controller.songController.state.song.value?.title ?? 'No name',
+                          fontSize: 20,
+                          maxLine: 2,
+                          fontWeight: FontWeight.bold,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
                     ),
                   ),
+
                   Obx(
                     () => Padding(
                       padding: const EdgeInsets.only(left: 10.0),
@@ -205,10 +210,21 @@ class SongView extends GetView<SongLogic> {
                                 ),
                               ),
                               IconButton(
-                                onPressed: () {},
-                                icon: const Icon(
-                                  Icons.favorite_border_outlined,
-                                  color: Color(0xFF39C0D4),
+                                onPressed: () {
+                                  controller.addToFavorite();
+                                },
+                                icon: Obx(
+                                  () => (controller.songController.state.song
+                                              .value?.isLiked ??
+                                          false)
+                                      ? Icon(
+                                          Icons.favorite_sharp,
+                                          color: Color(0xFF39C0D4),
+                                        )
+                                      : Icon(
+                                          Icons.favorite_border_outlined,
+                                          color: Color(0xFF39C0D4),
+                                        ),
                                 ),
                               ),
                             ],
@@ -343,15 +359,15 @@ class SongView extends GetView<SongLogic> {
                   ),
                   Obx(() => controller.songController.state.lyrics.isEmpty
                       ? Transform.scale(
-                        scale: 2,
-                        child: Lottie.asset(
+                          scale: 2,
+                          child: Lottie.asset(
                             'assets/lottie/empty_lyrics.json',
                             width: 200,
                             height: 120,
                             fit: BoxFit.contain,
                             repeat: true,
                           ),
-                      )
+                        )
                       : Container(
                           height: 105,
                           margin: const EdgeInsets.only(top: 10),
@@ -366,7 +382,6 @@ class SongView extends GetView<SongLogic> {
                           ),
                           child: ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
-
                             controller: controller.lyricScrollController,
                             shrinkWrap: true,
                             itemCount:

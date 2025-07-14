@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 
 import '../controllers/song_controller.dart';
+import '../views/home/home_logic.dart';
 
 class MusicPlayerService extends GetxController {
   final AudioPlayer _audioPlayer = AudioPlayer();
@@ -29,8 +30,7 @@ class MusicPlayerService extends GetxController {
     }
   }
 
-  void playNextSong() {
-    print("befor empty:");
+  void playNextSong() async{
     albumController.playedSongs.forEach((song) => print(song));
     if (albumController.waitingSongs.isEmpty) {
       albumController.waitingSongs.value = List.from(albumController.playedSongs);
@@ -38,19 +38,22 @@ class MusicPlayerService extends GetxController {
     }
 
     final next = albumController.waitingSongs.removeAt(0);
-
     songController.state.song.value = next;
-    songController.loadLyrics(next);
+    await songController.incrementPlayCount();
+    await Get.find<HomeLogic>().refreshSongs();
+    await songController.loadLyrics(next);
     albumController.updateSongsList(next);
     playMp3(next.filePath);
   }
 
-  void playPreviousSong() {
+  void playPreviousSong() async{
     if (albumController.playedSongs.length > 1) {
       final previous =
           albumController.playedSongs[albumController.playedSongs.length - 2];
       songController.state.song.value = previous;
-      songController.loadLyrics(previous);
+      await songController.incrementPlayCount();
+      await Get.find<HomeLogic>().refreshSongs();
+      await songController.loadLyrics(previous);
       albumController.updatePreviousSong(albumController.playedSongs.last);
       playMp3(previous.filePath);
     } else {

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:bloomy/models/song_model.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../widgets/snackbar.dart';
+
 class SongService {
 
   Future<File> _getSongFile() async {
@@ -46,15 +48,62 @@ class SongService {
     return data.map((e) => SongModel.fromJson(e)).toList();
   }
 
-  Future<void> deleteSongFile() async {
+  Future<void> resetAllLikedStatus() async {
+    final dir = await getApplicationDocumentsDirectory();
+    final jsonFile = File('${dir.path}/songs.json');
+
+    if (!jsonFile.existsSync()) return;
+
+    final content = await jsonFile.readAsString();
+    final data = jsonDecode(content);
+
+    final updatedData = data.map((e) {
+      final song = SongModel.fromJson(e);
+      final updatedSong = song.copyWith(isLiked: false);
+      return updatedSong.toJson();
+    }).toList();
+
+    await jsonFile.writeAsString(jsonEncode(updatedData));
+  }
+
+  Future<void> markSongsAsLiked(List<String> likedIds) async {
+    final dir = await getApplicationDocumentsDirectory();
+    final jsonFile = File('${dir.path}/songs.json');
+
+    if (!jsonFile.existsSync()) return;
+
+    final content = await jsonFile.readAsString();
+    final data = jsonDecode(content);
+
+    final updatedData = data.map((e) {
+      final song = SongModel.fromJson(e);
+
+      // Tạo bản sao, chỉnh isLiked nếu songId có trong danh sách
+      final updatedSong = likedIds.contains(song.id)
+          ? song.copyWith(isLiked: true)
+          : song;
+
+      return updatedSong.toJson();
+    }).toList();
+
+    await jsonFile.writeAsString(jsonEncode(updatedData));
+  }
+
+
+  Future<void> deleteAllSongFile() async {
     final dir = await getApplicationDocumentsDirectory();
     final file = File('${dir.path}/songs.json');
 
     if (await file.exists()) {
       await file.delete();
-      print('Đã xoá file songs.json');
+      showCustomSnackbar(
+        message: 'Removed all songs',
+      );
     } else {
-      print('File songs.json không tồn tại');
+      showCustomSnackbar(
+        message: 'Something wrong',
+        type: SnackbarType.error
+      );
     }
   }
 

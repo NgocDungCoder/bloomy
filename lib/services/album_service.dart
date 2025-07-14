@@ -26,6 +26,45 @@ class AlbumService {
     return decoded.map((e) => AlbumModel.fromJson(e)).toList();
   }
 
+  Future<AlbumModel?> loadAlbumById(String albumId) async {
+    final path = await _albumFilePath;
+    final file = File(path);
+
+    if (!file.existsSync()) return null;
+
+    final content = await file.readAsString();
+    final List decoded = json.decode(content);
+
+    try {
+      final albumJson = decoded.firstWhere((e) => e['id'] == albumId);
+      return AlbumModel.fromJson(albumJson);
+    } catch (e) {
+      // Không tìm thấy album
+      return null;
+    }
+  }
+
+
+
+  Future<List<AlbumModel>> loadAlbumsSecondary({bool fromStart = true}) async {
+    final path = await _albumFilePath;
+    final file = File(path);
+
+    if (!file.existsSync()) return [];
+
+    final content = await file.readAsString();
+    final List decoded = json.decode(content);
+    final allAlbums = decoded.map((e) => AlbumModel.fromJson(e)).toList();
+
+    if (allAlbums.length <= 6) return allAlbums;
+
+    return fromStart
+        ? allAlbums.sublist(0, 6) // 6 album đầu
+        : allAlbums.sublist(allAlbums.length - 6); // 6 album cuối
+  }
+
+
+
   Future<void> saveAlbums(List<AlbumModel> albums) async {
     final path = await _albumFilePath;
     final file = File(path);
@@ -43,6 +82,16 @@ class AlbumService {
     );
     albums.insert(0, album);
     await saveAlbums(albums);
+  }
+
+  Future<void> updateAlbum(AlbumModel updatedAlbum) async {
+    final albums = await loadAlbums();
+    final index = albums.indexWhere((a) => a.id == updatedAlbum.id);
+
+    if (index != -1) {
+      albums[index] = updatedAlbum;
+      await saveAlbums(albums);
+    }
   }
 
   Future<void> deleteAlbum(String albumId) async {

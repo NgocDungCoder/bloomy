@@ -7,9 +7,11 @@ import 'package:bloomy/controllers/song_controller.dart';
 import 'package:bloomy/models/albums.dart';
 import 'package:bloomy/models/song_model.dart';
 import 'package:bloomy/services/album_service.dart';
+import 'package:bloomy/services/liked_service.dart';
 import 'package:bloomy/services/lyric_service.dart';
 import 'package:bloomy/services/music_player_service.dart';
 import 'package:bloomy/views/float_play/float_play_logic.dart';
+import 'package:bloomy/views/home/home_logic.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,6 +19,7 @@ class SongLogic extends GetxController {
   final SongController songController = Get.find<SongController>();
   final MusicPlayerService _playerService = Get.find<MusicPlayerService>();
   final playerController = PlayerController(); //  //sóng nhạc
+  final LikedSongService likedSongService = Get.find<LikedSongService>();
   final floatPlayLogic = Get.find<FloatPlayLogic>();
   final duration = Duration.zero.obs; //tổng tgian bài hát
   final position = Duration.zero.obs; //thời gian hiện tại
@@ -49,7 +52,9 @@ class SongLogic extends GetxController {
           songController.state.song.value = songTemp;
           songController.state.isPlay.value = true;
           songController.state.isShow.value = true;
-          songController.loadLyrics(songController.state.song.value!);
+          await songController.incrementPlayCount();
+          await Get.find<HomeLogic>().refreshSongs();
+          await songController.loadLyrics(songController.state.song.value!);
           albumController.updateSongsList(songController.state.song.value!);
           _playerService.playMp3(songController.state.song.value!.filePath);
           floatPlayLogic.state.isPlay.value = true;
@@ -64,14 +69,14 @@ class SongLogic extends GetxController {
     if (albumTemp != null) {
       album.value = albumTemp;
       if (album.value?.id != albumController.albumId.value) {
-        albumController.waitingSongs.value = List.from(album.value!.songs);
+        albumController.playedSongs.clear();
+        albumController.waitingSongs.clear();
+        albumController.waitingSongs.addAll(album.value!.songs);
+        albumController.albumId.value = album.value!.id;
         albumController.albumName.value = album.value!.name;
       }
-      print("Mở từ album: ${albumController.waitingSongs.value}");
-      printSong();
     } else {
       albumController.waitingSongs.value = await songController.loadSongs();
-      printSong();
     }
     //trả về thời gian của bài hất
     _playerService.durationStream.listen((d) {
@@ -105,7 +110,14 @@ class SongLogic extends GetxController {
 
   }
 
-
+  void addToFavorite() {
+    if(songController.state.song.value!.isLiked) {
+      likedSongService.unlikeSong(songController.state.song.value!.id);
+    } else {
+      likedSongService.likeSong(songController.state.song.value!.id);
+    }
+    songController.likedSong();
+  }
 
   void playNextSong(){
     _playerService.playNextSong();

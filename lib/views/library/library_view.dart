@@ -1,3 +1,4 @@
+import 'package:bloomy/configs/colors.dart';
 import 'package:bloomy/enum/music_type.dart';
 import 'package:bloomy/routes/route.dart';
 import 'package:bloomy/views/library/library_logic.dart';
@@ -27,7 +28,7 @@ class _LibraryViewState extends State<LibraryView>
 
   @override
   Widget build(BuildContext context) {
-    final logic = Get.put(LibraryLogic());
+    final logic = Get.find<LibraryLogic>();
     return Scaffold(
       body: Container(
         padding: EdgeInsets.only(top: 0, left: 10, right: 10),
@@ -73,49 +74,61 @@ class _LibraryViewState extends State<LibraryView>
                     },
                     child: selecting
                         ? Row(
-                      key: ValueKey('selecting'),
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        PrimaryText(
-                          text: "Đã chọn (${logic.state.selectedIds.length})",
-                          fontSize: 12,
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            Get.toNamed(Routes.create.p,
-                                arguments: logic.state.selectedIds);
-                          },
-                          icon: Icon(
-                            Icons.add_photo_alternate_outlined,
-                            color: Colors.white,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            logic.clearSelection();
-                          },
-                          icon: Icon(
-                            Icons.close,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    )
+                            key: ValueKey('selecting'),
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              PrimaryText(
+                                text:
+                                    "Đã chọn (${logic.state.selectedIds.length})",
+                                fontSize: 12,
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  Get.toNamed(Routes.create.p,
+                                      arguments: logic.state.selectedIds);
+                                },
+                                icon: Icon(
+                                  Icons.add_photo_alternate_outlined,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  logic.clearSelection();
+                                },
+                                icon: Icon(
+                                  Icons.close,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          )
                         : Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            SizedBox(width: 122, height: 15,),
-                            IconButton(
-                                                  key: ValueKey('not_selecting'),
-                                                  onPressed: () {},
-                                                  icon: Icon(
-                            Icons.search,
-                            color: Color(0xFF00C2CB),
-                            size: 35,
-                                                  ),
-                                                ),
-                          ],
-                        ),
+                            key: ValueKey('not_selecting'),
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              SizedBox(width: 72,),
+                              IconButton(
+                                onPressed: () {
+                                  Get.toNamed(Routes.musicLocal.p);
+
+                                },
+                                icon: Icon(
+                                  Icons.add,
+                                  color: Color(0xFF00C2CB),
+                                  size: 35,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.search,
+                                  color: Color(0xFF00C2CB),
+                                  size: 35,
+                                ),
+                              ),
+                            ],
+                          ),
                   ),
                 ],
               ),
@@ -145,16 +158,14 @@ class _LibraryViewState extends State<LibraryView>
                               border: Border.all(width: 1, color: Colors.white),
                               gradient: tag == logic.state.musicType.value
                                   ? LinearGradient(
-                                      colors: [
-                                          Color(0xFF15686B),
-                                          Color(0xFF06A0B5)
-                                        ],
+                                      colors: AppColors.tealGradient,
                                       begin: Alignment.topCenter,
                                       end: Alignment.bottomCenter)
                                   : null),
                           child: Center(
                             child: PrimaryText(
                               text: tag.name,
+                              maxLine: 2,
                               fontSize: 12,
                             ),
                           ),
@@ -196,30 +207,33 @@ class _LibraryViewState extends State<LibraryView>
                 ),
               ),
 
-              Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 20),
-                child: Row(
-                  children: [
-                    Container(
-                      height: 56,
-                      width: 56,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                            colors: [Color(0xFFA6F3FF), Color(0xFF00C2CB)],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter),
+              InkWell(
+                onTap: () => Get.toNamed(Routes.likedSong.p),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 10, bottom: 20),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 56,
+                        width: 56,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                              colors: [Color(0xFFA6F3FF), Color(0xFF00C2CB)],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter),
+                        ),
+                        child: Icon(Icons.favorite_border_outlined),
                       ),
-                      child: Icon(Icons.favorite_border_outlined),
-                    ),
-                    SizedBox(
-                      width: 15,
-                    ),
-                    PrimaryText(
-                      text: "Your Liked Songs",
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ],
+                      SizedBox(
+                        width: 15,
+                      ),
+                      PrimaryText(
+                        text: "Your Liked Songs",
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ],
+                  ),
                 ),
               ),
               //Your Top Genres
@@ -281,12 +295,12 @@ class _LibraryViewState extends State<LibraryView>
                                             begin: Alignment.topLeft,
                                             end: Alignment.bottomRight)
                                         : LinearGradient(
-                                        colors: [
-                                          Colors.transparent,
-                                          Colors.transparent,
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight),
+                                            colors: [
+                                                Colors.transparent,
+                                                Colors.transparent,
+                                              ],
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight),
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   child: Row(
@@ -306,7 +320,7 @@ class _LibraryViewState extends State<LibraryView>
                                                 borderRadius:
                                                     BorderRadius.circular(5),
                                                 child: Image.asset(
-                                                  item.coverImage,
+                                                  item.coverImage ?? "",
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
@@ -317,6 +331,7 @@ class _LibraryViewState extends State<LibraryView>
                                             Expanded(
                                               child: PrimaryText(
                                                 text: item.title,
+                                                maxLine: 2,
                                                 fontWeight: FontWeight.bold,
                                               ),
                                             ),
@@ -354,7 +369,6 @@ class _LibraryViewState extends State<LibraryView>
                             final item = logic.state.albums[index];
                             return InkWell(
                               onTap: () {
-                                print("albummm: ${item.toString()}");
                                 Get.toNamed(Routes.playlist.p, arguments: item);
                               },
                               child: Container(
@@ -379,9 +393,12 @@ class _LibraryViewState extends State<LibraryView>
                                     SizedBox(
                                       width: 15,
                                     ),
-                                    PrimaryText(
-                                      text: item.name,
-                                      fontWeight: FontWeight.bold,
+                                    Expanded(
+                                      child: PrimaryText(
+                                        text: item.name,
+                                        maxLine: 2,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -420,9 +437,12 @@ class _LibraryViewState extends State<LibraryView>
                                   SizedBox(
                                     width: 15,
                                   ),
-                                  PrimaryText(
-                                    text: item.name,
-                                    fontWeight: FontWeight.bold,
+                                  Expanded(
+                                    child: PrimaryText(
+                                      text: item.name,
+                                      maxLine: 2,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -432,12 +452,12 @@ class _LibraryViewState extends State<LibraryView>
                                 height: 15,
                               ),
                           itemCount: logic.state.artists.length);
-                    case MusicType.folders:
+                    case MusicType.podcasts:
                       return ListView.separated(
                           shrinkWrap: true,
                           physics: NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
-                            final item = logic.state.folders[index];
+                            final item = logic.state.podcasts[index];
                             return InkWell(
                               onTap: () {
                                 Get.toNamed(Routes.folder.p);
@@ -465,9 +485,12 @@ class _LibraryViewState extends State<LibraryView>
                                     SizedBox(
                                       width: 15,
                                     ),
-                                    PrimaryText(
-                                      text: item.name,
-                                      fontWeight: FontWeight.bold,
+                                    Expanded(
+                                      child: PrimaryText(
+                                        text: item.name,
+                                        maxLine: 2,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -477,7 +500,7 @@ class _LibraryViewState extends State<LibraryView>
                           separatorBuilder: (context, index) => SizedBox(
                                 height: 15,
                               ),
-                          itemCount: logic.state.folders.length);
+                          itemCount: logic.state.podcasts.length);
                   }
                 }),
               ),

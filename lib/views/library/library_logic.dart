@@ -6,17 +6,18 @@ import 'package:bloomy/models/songs.dart';
 import 'package:bloomy/services/album_service.dart';
 import 'package:bloomy/services/song_service.dart';
 import 'package:bloomy/views/library/library_state.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class LibraryLogic extends GetxController {
   final state = LibraryState();
-  final albumService = Get.find<AlbumService>();
-  final songService = Get.find<SongService>();
+  final SongService songService;
+  final AlbumService albumService;
 
-  @override
-  void onInit() {
-    super.onInit();
-    loadData();
+  LibraryLogic(this.songService, this.albumService) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      loadData();
+    });
   }
 
   void changeType(MusicType type) {
@@ -24,7 +25,11 @@ class LibraryLogic extends GetxController {
     loadData();
   }
 
-  void loadData() async {
+  Future refreshLibrary() async {
+    await loadData();
+  }
+
+  Future loadData() async {
     switch (state.musicType.value) {
       case MusicType.songs:
         state.songs.value = await songService.getSavedSongs();
@@ -42,8 +47,8 @@ class LibraryLogic extends GetxController {
           Artist(name: "Pop Fusion", image: "assets/images/img2.jpg"),
         ];
         break;
-      case MusicType.folders:
-        state.folders.value = [
+      case MusicType.podcasts:
+        state.podcasts.value = [
           Folder(name: "Made For You", image: "assets/images/img3.jpg"),
           Folder(name: "RELEASED", image: "assets/images/img4.jpg"),
           Folder(name: "Music Charts", image: "assets/images/img5.jpg"),
@@ -63,12 +68,10 @@ class LibraryLogic extends GetxController {
 
   void toggleSelection(String id) {
     final current = Set<String>.from(state.selectedIds); // clone
-    print("đã vô đc");
     if (current.contains(id)) {
       current.remove(id);
     } else {
       current.add(id);
-      print("đã thêm");
     }
     state.selectedIds.value = current; // Gán lại để trigger Obx rebuild
   }

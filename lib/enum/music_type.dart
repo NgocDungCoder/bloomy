@@ -1,1 +1,1 @@
-enum MusicType { songs, albums, artists, folders }
+enum MusicType { songs, albums, artists, podcasts }
