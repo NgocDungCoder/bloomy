@@ -8,6 +8,19 @@
 	<string>Bloomy</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+	<string>885894862522-j8mq3fcg4ufmf59dt4ba4bj7em5c1nel.apps.googleusercontent.com</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleTypeRole</key>
+            <string>Editor</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <!-- Copied from GoogleService-Info.plist -->
+                <string>com.googleusercontent.apps.885894862522-j8mq3fcg4ufmf59dt4ba4bj7em5c1nel</string>
+            </array>
+        </dict>
+    </array>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>

@@ -11,9 +11,12 @@ import 'package:bloomy/views/menu/menu_logic.dart';
 import 'package:bloomy/views/menu/menu_view.dart';
 import 'package:bloomy/views/queue/queue_view.dart';
 import 'package:bloomy/views/signIn/singIn_view.dart';
+import 'package:bloomy/views/signUp/signup_view.dart';
 import 'package:bloomy/views/song/song_view.dart';
 import 'package:bloomy/views/stat/stat_view.dart';
 import 'package:bloomy/views/welcome/welcome_view.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/routes/custom_transition.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 
 import '../views/add_music_local/add_music_view.dart';
@@ -67,6 +70,7 @@ abstract class Routes {
   static const create = RoutePath('/create');
   static const welcome = RoutePath('/welcome');
   static const signIn = RoutePath('/signIn');
+  static const signUp = RoutePath('/signUp');
   static const login = RoutePath('/login');
   static const main = RoutePath('/main');
   static const musicLocal = RoutePath('/musicLocal');
@@ -84,7 +88,6 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.home.sp,
     page: () => HomeView(),
-    binding: HomeBinding(),
     // binding: SplashBinding(),
   ),
   GetPage(
@@ -151,12 +154,12 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.signIn.sp,
     page: () => SignInView(),
-    // binding: SplashBinding(),
+    binding: SignInBinding(),
   ),
   GetPage(
     name: Routes.login.sp,
     page: () => LoginView(),
-    // binding: SplashBinding(),
+    binding: LoginBinding(),
   ),
   GetPage(
     name: Routes.main.sp,
@@ -166,5 +169,10 @@ final List<GetPage> getPages = [
   GetPage(
     name: Routes.musicLocal.sp,
     page: () => AddMusicLocal(),
+  ),
+  GetPage(
+    name: Routes.signUp.sp,
+    page: () => SignupView(),
+    binding: SignupBinding(),
   ),
 ].toList();

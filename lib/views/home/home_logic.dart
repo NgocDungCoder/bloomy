@@ -1,7 +1,11 @@
+import 'package:bloomy/services/auth_service.dart';
 import 'package:bloomy/views/home/home_state.dart';
+import 'package:bloomy/widgets/snackbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../routes/route.dart';
 import '../../services/album_service.dart';
 import '../../services/song_service.dart';
 
@@ -9,12 +13,17 @@ class HomeLogic extends GetxController {
   final state = HomeState();
   final SongService songService;
   final AlbumService albumService;
+  final AuthService authService;
+  final Rx<User?> user = Rx<User?>(null);
 
-  HomeLogic(this.songService, this.albumService) {
+
+  HomeLogic(this.songService, this.albumService, this.authService) {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await refreshAlbum();
-
       await refreshSongs();
+      if (authService.isAuth.value) {
+        user.value = authService.getCurrentUser();
+      }
     });
   }
 
@@ -37,5 +46,14 @@ class HomeLogic extends GetxController {
       ..sort((a, b) => b.lastPlayedDate!.compareTo(a.lastPlayedDate!));
 
     state.continueList.addAll(recentSongs.take(6));
+  }
+
+  Future logout() async{
+    try {
+      await authService.logout();
+      Get.offNamed(Routes.login.p);
+    } catch (e){
+      print("lỗi logout: $e");
+    }
   }
 }

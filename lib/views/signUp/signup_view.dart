@@ -1,24 +1,22 @@
+import 'package:bloomy/configs/colors.dart';
 import 'package:bloomy/routes/route.dart';
+import 'package:bloomy/views/signUp/signup_logic.dart';
 import 'package:bloomy/widgets/primary_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:velocity_x/velocity_x.dart';
 
-import 'login_logic.dart';
-
-class LoginBinding extends Bindings {
+class SignupBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut(() => LoginLogic(Get.find()));
+    Get.lazyPut(() => SignupLogic(Get.find()));
   }
 }
 
-class LoginView extends StatelessWidget {
+class SignupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final logic = Get.find<LoginLogic>();
+    final logic = Get.find<SignupLogic>();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black,
@@ -37,16 +35,15 @@ class LoginView extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(
-            width: 300,
-            height: 300,
+            width: 200,
+            height: 200,
             child: Image.asset(
               "assets/logo/logo_bloomy.png",
               fit: BoxFit.cover,
             ),
           ),
-
           PrimaryText(
-            text: "Sign in to your account",
+            text: "Sign up to Bloomy",
             fontWeight: FontWeight.bold,
             fontSize: 25,
           ),
@@ -55,8 +52,8 @@ class LoginView extends StatelessWidget {
             child: SizedBox(
               width: 350,
               child: TextField(
-                controller: logic.emailController,
                 keyboardType: TextInputType.emailAddress,
+                controller: logic.emailController,
                 style: GoogleFonts.aBeeZee(
                   color: Colors.white,
                 ),
@@ -84,8 +81,8 @@ class LoginView extends StatelessWidget {
             child: SizedBox(
               width: 350,
               child: Obx(() => TextField(
-                    controller: logic.passwordController,
                     obscureText: logic.hiddenPass.value,
+                    controller: logic.passwordController,
                     style: GoogleFonts.aBeeZee(
                       color: Colors.white,
                     ),
@@ -115,6 +112,47 @@ class LoginView extends StatelessWidget {
                   )),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 15),
+            child: SizedBox(
+              width: 350,
+              child: Obx(() => TextField(
+                onChanged: (_) => logic.validateRepeatPassword(),
+                    obscureText: logic.hiddenRepeatPass.value,
+                    controller: logic.repeatPasswordController,
+                    style: GoogleFonts.aBeeZee(
+                      color: Colors.white,
+                    ),
+                    cursorColor: Colors.white,
+                    decoration: InputDecoration(
+                        hintText: "Repeat password",
+                        hintStyle: GoogleFonts.aBeeZee(
+                          color: Color(0xFF8A9A9D),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(logic.hiddenRepeatPass.value
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () => logic.hiddenRepeatPass.toggle(),
+                        ),
+                        suffixIconColor: Color(0xFF8A9A9D),
+                        prefixIcon: Icon(Icons.password),
+                        prefixIconColor: Color(0xFF8A9A9D),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(width: 1, color: Colors.white),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(width: 2, color: Colors.white),
+                          borderRadius: BorderRadius.circular(15),
+                        )),
+                  )),
+            ),
+          ),
+          Obx(() => logic.isPasswordMismatch.value
+              ? PrimaryText(
+                  text: "Repeat password not match", color: AppColors.red)
+              : const SizedBox.shrink()),
           Container(
             margin: EdgeInsets.symmetric(vertical: 15),
             decoration: BoxDecoration(boxShadow: [
@@ -126,23 +164,19 @@ class LoginView extends StatelessWidget {
               height: 65,
               child: ElevatedButton(
                 onPressed: () {
-                  logic.loginWithEmail();
+                  logic.signUpWithEmail();
+                  // Get.offNamed(Routes.main.p);
                 },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   backgroundColor: Color(0xFF06A0B5),
                 ),
                 child: PrimaryText(
-                  text: "Sign In",
+                  text: "Sign up",
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-          ),
-          PrimaryText(
-            text: "Forget the password",
-            color: Color(0xFF06A0B5),
-            fontWeight: FontWeight.bold,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 15),
@@ -178,7 +212,7 @@ class LoginView extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () async {
-                  logic.loginWithGG();
+                  logic.signUpWithEmail();
                 },
                 child: Container(
                   width: 50,

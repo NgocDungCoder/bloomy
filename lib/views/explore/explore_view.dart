@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../routes/route.dart';
+
 class ExploreView extends StatelessWidget {
   const ExploreView({super.key});
 
@@ -38,6 +40,14 @@ class ExploreView extends StatelessWidget {
               ),
             ),
             TextField(
+              onChanged: (value) {
+                logic.onSearchChanged(value);
+                logic.isSearching.value = true;
+                if (value == "") {
+                  logic.isSearching.value = false;
+                }
+                ;
+              },
               decoration: InputDecoration(
                 prefixIcon: Icon(Icons.search),
                 prefixIconColor: Color(0xFF8A9A9D),
@@ -67,108 +77,154 @@ class ExploreView extends StatelessWidget {
                 letterSpacing: 0.5,
               ),
             ),
-
-            //Your Top Genres
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10.0, top: 20),
-              child: PrimaryText(
-                text: "Your Top Genres",
-                fontSize: 18,
-              ),
-            ),
-            GridView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 20,
-                  childAspectRatio: 1.6),
-              itemBuilder: (context, index) {
-                final genres = logic.state.genresList[index];
-                return Stack(children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: logic.state.colors[index],
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-
-                  Positioned(
-                    right: -10,
-                    bottom: -15,
-                    child: Transform.rotate(
-                      angle: 0.4,
-                      child: SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: Image.asset(genres.coverImage, fit: BoxFit.cover,),
+            Obx(
+              () => logic.isSearching.value
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if(logic.filteredSongs.length > 0)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
+                          child: PrimaryText(text: "Songs", fontWeight: FontWeight.bold,),
                         ),
+                        if(logic.filteredSongs.length > 0)
+                          Obx(() => ListView.separated(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              final item = logic.filteredSongs[index];
+
+                              return InkWell(
+                                onTap: () {
+                                  Get.toNamed(Routes.song.p, arguments: {
+                                    'song': item, // chỉ thêm nếu có
+                                  });
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 100,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: 100,
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(5)),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                BorderRadius.circular(5),
+                                                child: Image.asset(
+                                                  item.coverImage ?? "",
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 15,
+                                            ),
+                                            Expanded(
+                                              child: PrimaryText(
+                                                text: item.title,
+                                                maxLine: 2,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) => SizedBox(
+                              height: 15,
+                            ),
+                            itemCount: logic.filteredSongs.length),),
+                        if(logic.filteredAlbums.length > 0)
+                          Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
+                          child: PrimaryText(text: "Albums", fontWeight: FontWeight.bold,),
+                        ),
+                        if(logic.filteredAlbums.length > 0)
+                          Obx(() => ListView.separated(
+                            shrinkWrap: true,
+                            physics: NeverScrollableScrollPhysics(),
+                            itemBuilder: (context, index) {
+                              final item = logic.filteredAlbums[index];
+
+                              return InkWell(
+                                onTap: () {
+                                  Get.toNamed(Routes.playlist.p, arguments: item);
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  height: 100,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              height: 100,
+                                              width: 100,
+                                              decoration: BoxDecoration(
+                                                  borderRadius:
+                                                  BorderRadius.circular(5)),
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                BorderRadius.circular(5),
+                                                child: Image.asset(
+                                                  item.coverImage ?? "",
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                              width: 15,
+                                            ),
+                                            Expanded(
+                                              child: PrimaryText(
+                                                text: item.name,
+                                                maxLine: 2,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                            separatorBuilder: (context, index) => SizedBox(
+                              height: 15,
+                            ),
+                            itemCount: logic.filteredAlbums.length),),
+                        if(logic.filteredSongs.length < 1 && logic.filteredAlbums.length <1)
+                          SizedBox(
+                            height: 600,
+                            child: Center(
+                              child: PrimaryText(text: "Don\'t have any result"),
+                            ),
+                          ),
+                      ],
+                    )
+                  : SizedBox(
+                      height: 600,
+                      child: Center(
+                        child: PrimaryText(text: "What are you looking for ?"),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: 10,
-                    left: 15,
-                    child: PrimaryText(text: genres.name),
-                  ),
-                ]);
-              },
-              itemCount: logic.state.genresList.length,
-            ),
-
-            //Browse All
-            const Padding(
-              padding: EdgeInsets.only(bottom: 10.0, top: 20),
-              child: PrimaryText(
-                text: "Browse All",
-                fontSize: 18,
-              ),
-            ),
-            GridView.builder(
-              physics: NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 20,
-                  childAspectRatio: 1.6),
-              itemBuilder: (context, index) {
-                final browse = logic.state.browseList[index];
-                return Stack(children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: logic.state.colors2[index],
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                  ),
-
-                  Positioned(
-                    right: -10,
-                    bottom: -15,
-                    child: Transform.rotate(
-                      angle: 0.4,
-                      child: SizedBox(
-                        width: 100,
-                        height: 100,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: Image.asset(browse.coverImage, fit: BoxFit.cover,),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 10,
-                    left: 15,
-                    child: PrimaryText(text: browse.name),
-                  ),
-                ]);
-              },
-              itemCount: logic.state.browseList.length,
             ),
           ],
         ),

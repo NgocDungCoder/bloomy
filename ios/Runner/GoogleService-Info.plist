@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>885894862522-j8mq3fcg4ufmf59dt4ba4bj7em5c1nel.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.885894862522-j8mq3fcg4ufmf59dt4ba4bj7em5c1nel</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>885894862522-shejkl2tmmkio0ljqtb2actjrrqi69os.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCfcocuNfQ1UAKRkceUja_ywNiIlrYgISQ</string>
+	<key>GCM_SENDER_ID</key>
+	<string>885894862522</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.bloomy</string>
+	<key>PROJECT_ID</key>
+	<string>bloomy-duckit</string>
+	<key>STORAGE_BUCKET</key>
+	<string>bloomy-duckit.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:885894862522:ios:a3a93bd9c8888a75ab5483</string>
+</dict>
+</plist>

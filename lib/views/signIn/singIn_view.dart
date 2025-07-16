@@ -1,12 +1,22 @@
 import 'package:bloomy/routes/route.dart';
+import 'package:bloomy/views/signIn/signIn_logic.dart';
 import 'package:bloomy/widgets/primary_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+class SignInBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.lazyPut(() => SignInLogic(Get.find()));
+  }
+
+}
+
 class SignInView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final logic = Get.find<SignInLogic>();
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -36,34 +46,39 @@ class SignInView extends StatelessWidget {
             fontWeight: FontWeight.bold,
             fontSize: 40,
           ),
-          Container(
-            height: 60,
-            width: 320,
-            margin: EdgeInsets.symmetric(vertical: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.white),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 35,
-                  height: 35,
-                  child: Image.asset(
-                    "assets/logo/google.png",
-                    fit: BoxFit.cover,
+          InkWell(
+            onTap: () {
+              logic.loginWithGG();
+            },
+            child: Container(
+              height: 60,
+              width: 320,
+              margin: EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1, color: Colors.white),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 35,
+                    height: 35,
+                    child: Image.asset(
+                      "assets/logo/google.png",
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                PrimaryText(
-                  text: "Continue with Google",
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                ),
-              ],
+                  SizedBox(
+                    width: 20,
+                  ),
+                  PrimaryText(
+                    text: "Continue with Google",
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ],
+              ),
             ),
           ),
           Container(
@@ -153,13 +168,16 @@ class SignInView extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 PrimaryText(
-                  text: "Don't have aa account ? ",
+                  text: "Don't have an account ? ",
                   fontWeight: FontWeight.bold,
                 ),
-                PrimaryText(
-                  text: "Sign up",
-                  color: Color(0xFF06A0B5),
-                  fontWeight: FontWeight.bold,
+                InkWell(
+                  onTap: () => Get.toNamed(Routes.signUp.p),
+                  child: PrimaryText(
+                    text: "Sign up",
+                    color: Color(0xFF06A0B5),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),

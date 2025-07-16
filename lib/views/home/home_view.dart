@@ -1,3 +1,4 @@
+import 'package:bloomy/configs/colors.dart';
 import 'package:bloomy/routes/route.dart';
 import 'package:bloomy/views/home/home_logic.dart';
 import 'package:bloomy/widgets/primary_text.dart';
@@ -5,13 +6,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-
-class HomeBinding extends Bindings {
-  @override
-  void dependencies() {
-    Get.lazyPut(() => HomeLogic(Get.find(), Get.find()));
-  }
-}
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -59,21 +53,45 @@ class HomeView extends StatelessWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(100),
                             // 👈 đảm bảo bo tròn
-                            child: Image.asset(
-                              "assets/images/img999.jpg",
-                              fit: BoxFit.cover,
+                            child: Obx(
+                              () => logic.user.value?.photoURL != null
+                                  ? Image.network(
+                                      logic.user.value!.photoURL!,
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.asset(
+                                      "assets/images/img999.jpg",
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
                           ),
                         ),
                         const SizedBox(
                           width: 15,
                         ),
-                        const Column(
+                        Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             PrimaryText(text: 'Welcome back!'),
-                            PrimaryText(text: 'username'),
+                            Obx(() {
+                              final name = logic.user.value?.displayName;
+
+                              if (name?.isNotEmpty ?? false) {
+                                return SizedBox(
+                                  width: 150,
+                                  child: FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    alignment: Alignment.centerLeft,
+                                    child: PrimaryText(
+                                      text: name!,
+                                    ),
+                                  ),
+                                );
+
+                              }
+                              return SizedBox.shrink();
+                            })
                           ],
                         ),
                       ],
@@ -90,14 +108,18 @@ class HomeView extends StatelessWidget {
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            print(logic.user.value?.email);
+                          },
                           icon: const Icon(
                             Icons.notifications_none_outlined,
                             color: Colors.white,
                           ),
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () async {
+                            await logic.logout();
+                          },
                           icon: const Icon(
                             Icons.settings_outlined,
                             color: Colors.white,
@@ -223,14 +245,29 @@ class HomeView extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Positioned(
-                              bottom: 0,
-                              child: Container(
-                                height: 12,
-                                width: 250,
-                                color: Colors.yellow,
-                              ),
-                            ),
+                            Obx(() {
+                              final length = logic.state.mixesList.length;
+
+                              Color color;
+                              if (length > 30) {
+                                color = AppColors.red;
+                              } else if (length > 15) {
+                                color = Colors.yellow;
+                              } else if (length > 0) {
+                                color = AppColors.green;
+                              } else {
+                                color = Colors.grey; // màu khi không có dữ liệu
+                              }
+
+                              return Positioned(
+                                bottom: 0,
+                                child: Container(
+                                  height: 12,
+                                  width: 250,
+                                  color: color,
+                                ),
+                              );
+                            }),
                           ],
                         ),
                       );

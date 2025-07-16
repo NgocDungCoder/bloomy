@@ -90,11 +90,11 @@ class CreateView extends GetView<CreateLogic> {
                       ),
                       child: PrimaryButton(
                         text: 'Create',
-                        onPressed: () {
+                        onPressed: () async {
                           final enteredTitle =
                               playlistTitleController.text.trim();
                           if (enteredTitle.isNotEmpty) {
-                            controller.createNewAlbum(enteredTitle);
+                            await controller.createNewAlbum(enteredTitle);
                             Get.back();
                           } else {
                             // Xử lý trường hợp chưa nhập title (nếu muốn)

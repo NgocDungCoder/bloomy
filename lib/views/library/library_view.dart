@@ -107,7 +107,7 @@ class _LibraryViewState extends State<LibraryView>
                             key: ValueKey('not_selecting'),
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              SizedBox(width: 72,),
+                              SizedBox(width: 123,),
                               IconButton(
                                 onPressed: () {
                                   Get.toNamed(Routes.musicLocal.p);
@@ -115,14 +115,6 @@ class _LibraryViewState extends State<LibraryView>
                                 },
                                 icon: Icon(
                                   Icons.add,
-                                  color: Color(0xFF00C2CB),
-                                  size: 35,
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.search,
                                   color: Color(0xFF00C2CB),
                                   size: 35,
                                 ),

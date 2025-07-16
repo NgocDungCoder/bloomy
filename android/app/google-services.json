@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "885894862522",
+    "project_id": "bloomy-duckit",
+    "storage_bucket": "bloomy-duckit.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:885894862522:android:7519d38fd494c746ab5483",
+        "android_client_info": {
+          "package_name": "com.example.bloomy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "885894862522-shejkl2tmmkio0ljqtb2actjrrqi69os.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.bloomy",
+            "certificate_hash": "323d7213af4b34ef783094eca2b3e312c291b1eb"
+          }
+        },
+        {
+          "client_id": "885894862522-nkncle6dop05a43tbojfb40eaiprhnug.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBiR3UFtTWN5BpxX-gn-LMkpeCGsRFYKbE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "885894862522-nkncle6dop05a43tbojfb40eaiprhnug.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "885894862522-j8mq3fcg4ufmf59dt4ba4bj7em5c1nel.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.bloomy"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

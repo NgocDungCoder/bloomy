@@ -8,6 +8,7 @@ class AppColors {
   static const mint = Color(0xFF6DE1D2);
   static const red = Color(0xFFE14434);
   static const yellow = Color(0xFFFFD63A);
+  static const green = Color(0xFF00FF9C);
 
   static final greyBackground = Colors.grey.shade900;
   static final greyBackgroundSecondary = Color(0xFF98A1BC);

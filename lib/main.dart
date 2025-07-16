@@ -5,13 +5,21 @@ import 'package:bloomy/controllers/init_controller.dart';
 import 'package:bloomy/services/init_service.dart';
 import 'package:bloomy/services/permission.dart';
 import 'package:bloomy/views/app.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'firebase_options.dart';
+
 void main() async {
+
 
   await runZonedGuarded<Future<void>>(() async {
     WidgetsFlutterBinding.ensureInitialized();
+
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     //làm cho thanh trạng thái ngày giờ trong suốt
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -20,12 +28,8 @@ void main() async {
     await initServices();
     await initControllers();
 
-
     requestStoragePermission();
 
-    // await Firebase.initializeApp(
-    //     options: DefaultFirebaseOptions.currentPlatform,);
-    //
     // await initDeepLink();
     await initServices();
     await initControllers();
@@ -43,4 +47,3 @@ void main() async {
     print(stack);
   });
 }
-
