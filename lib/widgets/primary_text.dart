@@ -9,6 +9,7 @@ class PrimaryText extends StatelessWidget {
   final int? maxLine;
   final TextOverflow? overflow;
   final TextAlign? textAlign;
+  final bool? softWrap;
 
   const PrimaryText({
     Key? key,
@@ -16,6 +17,7 @@ class PrimaryText extends StatelessWidget {
     this.fontSize = 16,
     this.fontWeight = FontWeight.normal,
     this.color = Colors.white,
+    this.softWrap,
     this.textAlign,
     this.maxLine = 1,
     this.overflow = TextOverflow.ellipsis,
@@ -27,6 +29,7 @@ class PrimaryText extends StatelessWidget {
       text,
       maxLines: maxLine,
       overflow: overflow,
+      softWrap: softWrap,
       textAlign: textAlign,
       style: GoogleFonts.aBeeZee(
         fontSize: fontSize,

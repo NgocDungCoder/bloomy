@@ -17,6 +17,8 @@ class SongBinding extends Bindings {
 class SongView extends GetView<SongLogic> {
   @override
   Widget build(BuildContext context) {
+    final lyricWidth = MediaQuery.of(context).size.width - 60;
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Obx(
@@ -169,21 +171,27 @@ class SongView extends GetView<SongLogic> {
                     ),
                   ),
                   Obx(
-                        () => Padding(
+                    () => Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15.0),
                       child: SizedBox(
-                        width: double.infinity, // đảm bảo có ràng buộc chiều rộng
-                        child: PrimaryText(
-                          text: controller.songController.state.song.value?.title ?? 'No name',
-                          fontSize: 20,
-                          maxLine: 2,
-                          fontWeight: FontWeight.bold,
-                          overflow: TextOverflow.ellipsis,
+                        width: double.infinity,
+                        // đảm bảo có ràng buộc chiều rộng
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: PrimaryText(
+                            text: controller
+                                    .songController.state.song.value?.title ??
+                                'No name',
+                            fontSize: 20,
+                            maxLine: 1,
+                            fontWeight: FontWeight.bold,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ),
                     ),
                   ),
-
                   Obx(
                     () => Padding(
                       padding: const EdgeInsets.only(left: 10.0),
@@ -202,7 +210,7 @@ class SongView extends GetView<SongLogic> {
                             children: [
                               IconButton(
                                 onPressed: () {
-                                  print(controller.songController.state.lyrics);
+                                  print("screen: $lyricWidth");
                                 },
                                 icon: const Icon(
                                   Icons.share_outlined,
@@ -387,15 +395,17 @@ class SongView extends GetView<SongLogic> {
                             itemCount:
                                 controller.songController.state.lyrics.length,
                             itemBuilder: (context, index) {
-                              final isCurrent = index ==
-                                  controller.songController.state
-                                      .currentLyricIndex.value;
+                              final isCurrent = index == controller.songController.state.currentLyricIndex.value;
+
                               return Container(
                                 alignment: Alignment.topCenter,
                                 padding: EdgeInsets.only(top: 5, bottom: 5),
                                 child: PrimaryText(
                                   text: controller
                                       .songController.state.lyrics[index].text,
+                                  maxLine: controller
+                                      .songController.state.lyrics[index].maxLine,
+                                  overflow: TextOverflow.ellipsis,
                                   color: isCurrent
                                       ? Color(0xFFFFFA8D)
                                       : Colors.white,

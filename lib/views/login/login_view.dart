@@ -176,7 +176,7 @@ class LoginView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              InkWell(
+              GestureDetector(
                 onTap: () async {
                   logic.loginWithGG();
                 },
@@ -197,7 +197,10 @@ class LoginView extends StatelessWidget {
                           ))),
                 ),
               ),
-              InkWell(
+              GestureDetector(
+                onTap: () {
+                  Get.toNamed(Routes.main.p);
+                },
                 child: Container(
                   width: 50,
                   height: 50,

@@ -6,9 +6,7 @@ import 'package:bloomy/controllers/album_controller.dart';
 import 'package:bloomy/controllers/song_controller.dart';
 import 'package:bloomy/models/albums.dart';
 import 'package:bloomy/models/song_model.dart';
-import 'package:bloomy/services/album_service.dart';
 import 'package:bloomy/services/liked_service.dart';
-import 'package:bloomy/services/lyric_service.dart';
 import 'package:bloomy/services/music_player_service.dart';
 import 'package:bloomy/views/float_play/float_play_logic.dart';
 import 'package:bloomy/views/home/home_logic.dart';
@@ -31,6 +29,7 @@ class SongLogic extends GetxController {
   final albumController = Get.find<AlbumController>();
   var isShuffle = false.obs;
   final ScrollController lyricScrollController = ScrollController();
+  var heightScroll = 0;
 
   MusicPlayerService get audioPlayer => _playerService;
   Timer? _waveformStopTimer;
@@ -52,6 +51,7 @@ class SongLogic extends GetxController {
           songController.state.song.value = songTemp;
           songController.state.isPlay.value = true;
           songController.state.isShow.value = true;
+          heightScroll = 0;
           await songController.incrementPlayCount();
           await Get.find<HomeLogic>().refreshSongs();
           await songController.loadLyrics(songController.state.song.value!);
@@ -100,18 +100,34 @@ class SongLogic extends GetxController {
     });
     ever(songController.state.currentLyricIndex, (index) {
       if (lyricScrollController.hasClients) {
+        final height = songController.state.lyrics[index].maxLine == 2 ? 27 : 0;
+        print("height scroll: $heightScroll");
         lyricScrollController.animateTo(
-          index * 37.0, // 40.0 là chiều cao mỗi dòng (tuỳ chỉnh)
+          index * 37.0 + heightScroll,
+          duration: Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+        heightScroll += height;
+
+      }
+      if (lyricScrollController.hasClients) {
+        double offset = 0.0;
+        for (int i = 0; i < index; i++) {
+          final lyric = songController.state.lyrics[i];
+
+          offset += lyric.maxLine * 27.0 + 10.0; // 37px cho mỗi dòng (1 hoặc 2)
+        }
+        lyricScrollController.animateTo(
+          offset,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
       }
     });
-
   }
 
   void addToFavorite() {
-    if(songController.state.song.value!.isLiked) {
+    if (songController.state.song.value!.isLiked) {
       likedSongService.unlikeSong(songController.state.song.value!.id);
     } else {
       likedSongService.likeSong(songController.state.song.value!.id);
@@ -119,14 +135,17 @@ class SongLogic extends GetxController {
     songController.likedSong();
   }
 
-  void playNextSong(){
+  void playNextSong() {
+    heightScroll = 0;
     _playerService.playNextSong();
   }
-  void playPreviousSong(){
+
+  void playPreviousSong() {
+    heightScroll = 0;
     _playerService.playPreviousSong();
   }
 
-  void shuffleSongs(){
+  void shuffleSongs() {
     print("state: ${isShuffle.value}");
     albumController.shuffleAlbum(isShuffle.value);
   }
@@ -158,6 +177,7 @@ class SongLogic extends GetxController {
     await playerController.startPlayer();
     await playerController.seekTo(sliderValue.value.toInt());
   }
+
 
   @override
   void onClose() {

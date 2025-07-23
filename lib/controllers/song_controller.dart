@@ -20,7 +20,7 @@ class SongController extends GetxController {
   final LyricService lyricService = Get.find<LyricService>();
 
   final List<String> imageAssets = List.generate(
-    164,
+    206,
     (index) => 'assets/images/img${index + 1}.jpg',
   );
 
@@ -38,12 +38,9 @@ class SongController extends GetxController {
 
   Future<void> loadLyrics(SongModel song) async {
     try {
-      print("debug abc: ${song.getLyricAssetPath}");
       state.lyrics.value =
-          await LyricService.loadFromAsset(song.getLyricAssetPath);
-
+          await LyricService.loadLyricFromAsset(song.getLyricAssetPath);
     } catch (e) {
-      print("chưa có file lyrics của cái này: $e");
       state.lyrics.value = [];
     }
   }
@@ -67,7 +64,6 @@ class SongController extends GetxController {
 
       String songTitle = input['title']!;
       String artistName = input['artist']!;
-
 
       //lưu cái này vô chỗ lưu riêng cua app và trả về path
       String newPath = await _songService.saveMp3File(mp3File, fileName);
@@ -154,7 +150,8 @@ class SongController extends GetxController {
     List<SongModel> allSongs = await _songService.getSavedSongs();
 
     // 2. Tìm bài hát theo ID
-    final index = allSongs.indexWhere((song) => song.id == state.song.value?.id );
+    final index =
+        allSongs.indexWhere((song) => song.id == state.song.value?.id);
     if (index == -1) return; // Không tìm thấy
 
     final currentSong = allSongs[index];
@@ -177,14 +174,14 @@ class SongController extends GetxController {
     List<SongModel> allSongs = await _songService.getSavedSongs();
 
     // 2. Tìm bài hát theo ID
-    final index = allSongs.indexWhere((song) => song.id == state.song.value?.id );
+    final index =
+        allSongs.indexWhere((song) => song.id == state.song.value?.id);
     if (index == -1) return; // Không tìm thấy
 
     final currentSong = allSongs[index];
 
-    final updatedSong = currentSong.copyWith(
-      isLiked: !state.song.value!.isLiked
-    );
+    final updatedSong =
+        currentSong.copyWith(isLiked: !state.song.value!.isLiked);
     // 4. Cập nhật lại danh sách
     allSongs[index] = updatedSong;
 
@@ -199,7 +196,8 @@ class SongController extends GetxController {
     List<SongModel> allSongs = await _songService.getSavedSongs();
 
     // 2. Tìm bài hát theo ID
-    final index = allSongs.indexWhere((song) => song.id == state.song.value?.id);
+    final index =
+        allSongs.indexWhere((song) => song.id == state.song.value?.id);
     if (index == -1) return; // Không tìm thấy
 
     final currentSong = allSongs[index];

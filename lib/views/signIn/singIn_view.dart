@@ -46,7 +46,7 @@ class SignInView extends StatelessWidget {
             fontWeight: FontWeight.bold,
             fontSize: 40,
           ),
-          InkWell(
+          GestureDetector(
             onTap: () {
               logic.loginWithGG();
             },
@@ -81,33 +81,38 @@ class SignInView extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            height: 60,
-            width: 320,
-            margin: EdgeInsets.symmetric(vertical: 10),
-            decoration: BoxDecoration(
-              border: Border.all(width: 1, color: Colors.white),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: 35,
-                  height: 35,
-                  child: Image.asset(
-                    "assets/logo/facebook.png",
-                    fit: BoxFit.cover,
+          GestureDetector(
+            onTap: () {
+              Get.toNamed(Routes.main.p);
+            },
+            child: Container(
+              height: 60,
+              width: 320,
+              margin: EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(
+                border: Border.all(width: 1, color: Colors.white),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 35,
+                    height: 35,
+                    child: Image.asset(
+                      "assets/logo/facebook.png",
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: 20,
-                ),
-                PrimaryText(
-                  text: "Continue with Facebook",
-                  fontWeight: FontWeight.bold, fontSize: 14,
-                ),
-              ],
+                  SizedBox(
+                    width: 20,
+                  ),
+                  PrimaryText(
+                    text: "Continue with Facebook",
+                    fontWeight: FontWeight.bold, fontSize: 14,
+                  ),
+                ],
+              ),
             ),
           ),
           Padding(

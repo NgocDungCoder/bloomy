@@ -26,7 +26,7 @@ class CreateLogic extends GetxController {
   Future<void> createNewAlbum(String name) async {
     // Lấy random 1 cover image
     final List<String> imageAssets = List.generate(
-      164,
+      206,
           (index) => 'assets/images/img${index + 1}.jpg',
     );
     imageAssets.shuffle(); // random
